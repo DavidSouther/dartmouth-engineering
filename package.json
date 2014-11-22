@@ -7,6 +7,7 @@
     "rename": "echo 'Coming Soon!'"
   },
   "dependencies": {
+    "q": "^1.1.1",
     "rupert": "^0.2.5",
     "rupert-config-angular": "^0.0.3",
     "rupert-config-bootstrap": "^0.0.2"
