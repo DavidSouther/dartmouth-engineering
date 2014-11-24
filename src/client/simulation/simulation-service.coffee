@@ -19,11 +19,12 @@ class Simulation
     @positions = new Float64Array(10 * 2)
     for i in [0...10]
       @particles[i] = new Particle(@, i)
-      @positions[i * 2] = Math.random()
-      @positions[i * 2 + 1] = Math.random()
     @reset()
 
   reset: ->
+    for i in [0...@particles.length]
+      @positions[i * 2] = Math.random()
+      @positions[i * 2 + 1] = Math.random()
     data = new Float64Array(@positions) # Clone
     event =
       event: 'reset'
