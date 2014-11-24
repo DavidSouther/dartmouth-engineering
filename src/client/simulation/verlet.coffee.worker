@@ -1,0 +1,33 @@
+PARTICLE_COUNT = 0
+DIMENSIONS = 0
+P = null
+V = null
+A = null
+
+self.constraints = [
+  (P, i)-> Math.min(Math.max(P, 0), 1)
+]
+
+self.onmessage = ({data})->
+  self[data.event]?(data)
+
+self.reset = (e)->
+  PARTICLE_COUNT = e.count
+  DIMENSIONS = e.dimensions
+  P = new Float64Array(e.positions)
+  V = new Float64Array(P.length)
+  A = new Float64Array(P.length)
+
+self.tick = ({dt})->
+  for i in [0...PARTICLE_COUNT]
+    A[i] = if i % 2 is 0 then 0 else -1e-5
+    V[i] = V[i] + A[i] * dt
+    P[i] = P[i] + V[i] * dt
+    for constraint in self.constraints
+      P[i] = constraint(P[i], i)
+
+  data = new Float64Array(P)
+  msg =
+    event: 'render'
+    positions: data.buffer
+  self.postMessage msg, [data.buffer]

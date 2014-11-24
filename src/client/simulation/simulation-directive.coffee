@@ -5,4 +5,5 @@ angular.module('eau.simulation', [
   restrict: 'E'
   templateUrl: 'simulation/simulation-template'
   controller: ($scope, SimulationSvc)->
-    $scope.sim = SimulationSvc
+    $scope.dt = 16 # 16 millisecond tick
+    $scope.simulation = SimulationSvc
