@@ -5,7 +5,7 @@ md-content
         div.md-tile-content
           form(name="step", style="padding: 20px;")
             section(layout="row", layout-align="space-around")
-              md-text-float(label="Message", ng-model="dt")
+              md-text-float(label="Milliseconds", ng-model="dt")
               md-button.md-raised(ng-click="simulation.tick(dt)") Tick
     md-item(ng-repeat="particle in simulation.particles")
       md-item-content
