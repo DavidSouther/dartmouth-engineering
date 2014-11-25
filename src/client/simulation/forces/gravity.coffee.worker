@@ -1,0 +1,1 @@
+self.forces.push (i)-> if i % self.DIMENSIONS is 1 then -1e-5 else 0

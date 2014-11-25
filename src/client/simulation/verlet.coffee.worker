@@ -1,32 +1,36 @@
-PARTICLE_COUNT = 0
-DIMENSIONS = 0
-P = null
-V = null
-A = null
+self.PARTICLE_COUNT = 0
+self.DIMENSIONS = 0
+self.P = null
+self.V = null
+self.A = null
 
-self.constraints = [
-  (P, i)-> Math.min(Math.max(P, 0), 1)
-]
+self.forces = []
+self.constraints = []
 
 self.onmessage = ({data})->
   self[data.event]?(data)
 
+self.load = ({url})->
+  importScripts(url)
+
 self.reset = (e)->
-  PARTICLE_COUNT = e.count
-  DIMENSIONS = e.dimensions
-  P = new Float64Array(e.positions)
-  V = new Float64Array(P.length)
-  A = new Float64Array(P.length)
+  self.PARTICLE_COUNT = e.count
+  self.DIMENSIONS = e.dimensions
+  self.P = new Float64Array(e.positions)
+  self.V = new Float64Array(self.P.length)
+  self.A = new Float64Array(self.P.length)
 
 self.tick = ({dt})->
-  for i in [0...PARTICLE_COUNT]
-    A[i] = if i % 2 is 0 then 0 else -1e-5
-    V[i] = V[i] + A[i] * dt
-    P[i] = P[i] + V[i] * dt
+  for i in [0...self.PARTICLE_COUNT]
+    self.A[i] = 0
+    for force in self.forces
+      self.A[i] += force(i)
+    self.V[i] = self.V[i] + self.A[i] * dt
+    self.P[i] = self.P[i] + self.V[i] * dt
     for constraint in self.constraints
-      P[i] = constraint(P[i], i)
+      self.P[i] = constraint(self.P[i], i)
 
-  data = new Float64Array(P)
+  data = new Float64Array(self.P)
   msg =
     event: 'render'
     positions: data.buffer

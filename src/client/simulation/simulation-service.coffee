@@ -12,6 +12,11 @@ class Simulation
     @worker = WorkerSvc.get('/simulation/verlet.coffee')
     # @worker.addEventListener('message', ((e)->console.log(e)))
     @worker.addEventListener('error', ((e)->console.error(e)))
+    [
+      '/simulation/constraints/ground.coffee'
+      '/simulation/forces/gravity.coffee'
+    ].forEach (path)=>
+      @worker.postMessage({event: 'load', url: WorkerSvc.getURL(path)})
     @worker.addEventListener 'message', ({data})=>
       $rootScope.$apply =>
         @[data.event]?(data)
@@ -29,7 +34,7 @@ class Simulation
     event =
       event: 'reset'
       count: data.length
-      dimension: 2
+      dimensions: 2
       positions: data.buffer
     @worker.postMessage event, [data.buffer]
 

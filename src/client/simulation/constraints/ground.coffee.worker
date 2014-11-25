@@ -1,0 +1,1 @@
+self.constraints.push (P, i)-> Math.min(Math.max(P, 0), 1)
