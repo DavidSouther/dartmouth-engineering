@@ -8,6 +8,14 @@ md-content
               md-button.md-raised(ng-click="simulation.tick(dt)") Tick
               md-text-float(label="Milliseconds", ng-model="dt")
               md-button.md-raised(ng-click="simulation.reset()") Reset
+    md-item(layout="row", layout-align="center")
+      div
+        brick(
+          ng-repeat="particle in simulation.particles"
+          x="particle.position[0]"
+          y="particle.position[1]"
+          position-multiplier="10"
+        )
     md-item(ng-repeat="particle in simulation.particles")
       md-item-content
         div.md-tile-content(layout="row")

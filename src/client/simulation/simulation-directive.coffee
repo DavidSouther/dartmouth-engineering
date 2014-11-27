@@ -1,6 +1,7 @@
 angular.module('eau.simulation', [
   'eau.simulation.service'
   'simulation.simulation-template.template'
+  'eau.simulation.brick'
 ]).directive 'simulation', ->
   restrict: 'E'
   templateUrl: 'simulation/simulation-template'
