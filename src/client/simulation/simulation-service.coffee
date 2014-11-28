@@ -53,6 +53,9 @@ class Simulation
     @running = yes
     @tick()
 
+  toggle: ->
+    if @running then @running = no else @run()
+
 Simulation.$inject = [
   'WorkerSvc'
   '$rootScope'
