@@ -1,0 +1,5 @@
+self.forces.push (i)->
+  if i % self.DIMENSIONS is 1 and P[i] <= 0
+    Math.abs(V[i] / 9)
+  else
+    0
