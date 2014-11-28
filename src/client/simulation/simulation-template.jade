@@ -6,6 +6,7 @@ md-content
           form(name="step", style="padding: 20px;")
             section(layout="row", layout-align="center center")
               md-button.md-raised(ng-click="simulation.tick(dt)") Tick
+              md-button.md-raised(ng-click="simulation.run(dt)") Run 
               md-text-float(label="Milliseconds", ng-model="dt")
               md-button.md-raised(ng-click="simulation.reset()") Reset
     md-item(layout="row", layout-align="center")

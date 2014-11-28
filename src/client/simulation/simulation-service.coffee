@@ -9,6 +9,7 @@ class Particle
 
 class Simulation
   constructor: (WorkerSvc, $rootScope)->
+    @running = no
     @worker = WorkerSvc.get('/simulation/verlet.coffee')
     # @worker.addEventListener('message', ((e)->console.log(e)))
     @worker.addEventListener('error', ((e)->console.error(e)))
@@ -42,11 +43,15 @@ class Simulation
     @worker.postMessage {event: 'tick', dt}
 
   render: ({positions})->
+    if @running then requestAnimationFrame(=>@tick())
     positions = new Float64Array(positions)
     for i in [0...10]
       @positions[i * 2] = positions[i * 2]
       @positions[i * 2 + 1] = positions[i * 2 + 1]
-    console.log @positions
+
+  run: ->
+    @running = yes
+    @tick()
 
 Simulation.$inject = [
   'WorkerSvc'
