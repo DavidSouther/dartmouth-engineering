@@ -1,0 +1,12 @@
+svg(
+  width="500" height="550"
+  style="overflow:visible"
+  graph-scales="{\
+    x: ['linear', 0, 1],\
+    y: ['linear', 1, 0]\
+  }"
+)
+  brick(
+    ng-repeat="brick in arch"
+    at="$scales(brick.position)"
+  )

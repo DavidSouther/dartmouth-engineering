@@ -1,4 +1,4 @@
-describe 'Brick Directive', ->
+describe.skip 'Brick Directive', ->
   sut = null
   ctrlConstructor = null
 
@@ -30,4 +30,3 @@ describe 'Brick Directive', ->
       sut = ctrlConstructor()
       sut.y = 10
       expect(sut.getY()).to.equal 50
-
