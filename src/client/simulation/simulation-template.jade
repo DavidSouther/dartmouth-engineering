@@ -9,7 +9,7 @@ md-content
               md-button.md-raised(
                 ng-click="simulation.toggle()"
               ) {{ simulation.running ? 'Pause': 'Run' }}
-              md-text-float(label="Milliseconds", ng-model="dt")
+              md-text-float(label="Milliseconds", ng-model="simulation.dt")
               md-button.md-raised(ng-click="simulation.reset()") Reset
     md-item(layout="row", layout-align="center")
       div

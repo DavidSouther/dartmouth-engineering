@@ -8,19 +8,21 @@ class Particle
         ]
 
 class Simulation
-  constructor: (WorkerSvc, $rootScope)->
+  $rootScope = null
+
+  constructor: (WorkerSvc, _$rootScope_)->
+    $rootScope = _$rootScope_
+    @dt = 16
     @running = no
     @worker = WorkerSvc.get('/simulation/verlet.coffee')
-    # @worker.addEventListener('message', ((e)->console.log(e)))
     @worker.addEventListener('error', ((e)->console.error(e)))
     [
       '/simulation/constraints/ground.coffee'
       '/simulation/forces/gravity.coffee'
+      '/simulation/forces/bounce.coffee'
     ].forEach (path)=>
       @worker.postMessage({event: 'load', url: WorkerSvc.getURL(path)})
-    @worker.addEventListener 'message', ({data})=>
-      $rootScope.$apply =>
-        @[data.event]?(data)
+    @worker.addEventListener 'message', ({data})=>@[data.event]?(data)
     @particles = []
     @positions = new Float64Array(10 * 2)
     for i in [0...10]
@@ -39,15 +41,17 @@ class Simulation
       positions: data.buffer
     @worker.postMessage event, [data.buffer]
 
-  tick: (dt = 16)->
-    @worker.postMessage {event: 'tick', dt}
+  tick: ->
+    @worker.postMessage {event: 'tick', @dt}
 
   render: ({positions})->
-    if @running then requestAnimationFrame(=>@tick())
     positions = new Float64Array(positions)
-    for i in [0...10]
-      @positions[i * 2] = positions[i * 2]
-      @positions[i * 2 + 1] = positions[i * 2 + 1]
+    requestAnimationFrame =>
+      if @running then @tick()
+      $rootScope.$apply =>
+        for i in [0...10]
+          @positions[i * 2] = positions[i * 2]
+          @positions[i * 2 + 1] = positions[i * 2 + 1]
 
   run: ->
     @running = yes
