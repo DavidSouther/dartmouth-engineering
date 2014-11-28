@@ -3,9 +3,15 @@
     "verbose": true,
     "root": "./src/client",
     "vendors": {
-      "prefix": [],
-      "js": [],
-      "css": []
+      "prefix": [ "./node_modules" ],
+      "js": [
+        "d3-util/d3.js"
+      ],
+      "config": {
+        "dependencies": {
+          "rupert-config-angular-material": true
+        }
+      }
     }
   },
   "tls": false,

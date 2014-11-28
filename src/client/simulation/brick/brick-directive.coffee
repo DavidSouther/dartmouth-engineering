@@ -1,8 +1,13 @@
 angular.module('eau.simulation.brick', [
+  'graphing.svg'
   'simulation.brick.brick-template.template'
 ])
 .controller('BrickCtrl', () ->
-  @positionMultiplier = if @positionMultiplier > 0 then @positionMultiplier else 1
+  @positionMultiplier =
+    if @positionMultiplier > 0
+      @positionMultiplier
+    else
+      1
   @getX = ->
     parseInt(@x * @positionMultiplier)
   @getY = ->
@@ -21,4 +26,3 @@ angular.module('eau.simulation.brick', [
   controller: 'BrickCtrl'
   controllerAs: 'brickCtrl'
 )
-  

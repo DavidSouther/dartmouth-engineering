@@ -20,3 +20,4 @@ plugins/
 platform/
 www/
 build/
+npm-debug.log

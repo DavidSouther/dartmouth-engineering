@@ -7,6 +7,8 @@
     "rename": "echo 'Coming Soon!'"
   },
   "dependencies": {
+    "d3-util": "^3.4.13-u2",
+    "graphing": "https://github.com/DavidSouther/flaming-sansa#master",
     "q": "^1.1.1",
     "rupert": "^0.2.5",
     "rupert-config-angular-material": "0.0.4"

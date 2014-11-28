@@ -1,4 +1,7 @@
 svg(width="100" height="55" style="overflow:visible")
-  rect(ng-attr-x="{{brickCtrl.getX()}}" ng-attr-y="{{brickCtrl.getY()}}" width="100" height="55" fill="#BFBFBF")
-  rect(ng-attr-x="{{brickCtrl.getX() + 5}}" ng-attr-y="{{brickCtrl.getY() + 5}}" width="90" height="45" fill="#AF4848")
-
+  rect(
+    at="[brickCtrl.getX(), -brickCtrl.getY()]"
+    width="76.25" height="22.5"
+    stroke="#BFBFBF" fill="#AF4848"
+    stroke-width="2px"
+  )
