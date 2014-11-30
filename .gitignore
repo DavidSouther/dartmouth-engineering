@@ -21,3 +21,7 @@ platform/
 www/
 build/
 npm-debug.log
+
+# IDE and Text Editors
+.idea/
+
