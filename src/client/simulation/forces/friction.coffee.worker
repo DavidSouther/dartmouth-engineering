@@ -1,0 +1,2 @@
+self.forces.push (i)->
+  0 * -V[i] * .01
