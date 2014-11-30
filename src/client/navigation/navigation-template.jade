@@ -1,0 +1,4 @@
+md-button.menu-item(
+  ng-repeat="sim in nav.sims"
+  ui-sref="{{sim.name}}"
+) {{ sim.title || sim.name }}

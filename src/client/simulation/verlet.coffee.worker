@@ -14,14 +14,16 @@ self.load = ({url})->
   importScripts(url)
 
 self.reset = (e)->
-  self.PARTICLE_COUNT = e.count
-  self.DIMENSIONS = e.dimensions
+  self.N = e.count
+  self.D = e.dimensions
   self.P = new Float64Array(e.positions)
   self.V = new Float64Array(self.P.length)
   self.A = new Float64Array(self.P.length)
+  self.forces = []
+  self.constraints = []
 
 self.tick = ({dt})->
-  for i in [0...self.PARTICLE_COUNT]
+  for i in [0...self.N]
     self.A[i] = 0
     for force in self.forces
       self.A[i] += force(i)

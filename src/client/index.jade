@@ -18,20 +18,25 @@ html(lang='en', ng-app='eau')
     //- Comment below to disable real-time sockets.
     script(src="socket.io/socket.io.js")
 
-  body
-    //- Put your main content here
-    //- .container //- bootstrap
-    
-    md-toolbar
-      h2.md-toolbar-tools
-        span Verlet PoC
-    simulation
-    
-    //- .container-fluid //- Bootstrap Responsive
-    //- ion-nav-view //- Root for an ionic layout
-
-    //- Uncomment below for cordova Mobile support
-    //- script(src="cordova.js")
+  body(layout="horizontal")
+    md-sidenav.md-whiteframe-z1.md-sidenav-left(
+      md-is-locked-open="true"
+      layout="column"
+    )
+      md-toolbar
+        h2.md-toolbar-tools Simulations
+      md-content(flex)
+        navigation
+    div(
+      role="main"
+      layout="column"
+      flex
+    )
+      md-toolbar
+        h2.md-toolbar-tools
+          span Verlet PoC
+      md-content
+        ui-view(name='simulation')
 
     script(src="templates.js")
     script(src="workers.js")

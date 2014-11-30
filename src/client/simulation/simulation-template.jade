@@ -1,4 +1,4 @@
-md-content
+md-content(ng-init="simDetails = false")
   md-list
     md-item
       md-item-content
@@ -14,7 +14,14 @@ md-content
     md-item(layout="row", layout-align="center")
       div
         arch(bricks="simulation.particles")
-    md-item(ng-repeat="particle in simulation.particles")
+    md-divider
+    md-item
+      md-button(ng-click="simDetails = !simDetails")
+        | {{ simDetails ? "Hide" : "Show" }} Details
+    md-item(
+      ng-repeat="particle in simulation.particles"
+      ng-if="simDetails"
+    )
       md-item-content
         div.md-tile-content(layout="row")
           div(flex="5")
