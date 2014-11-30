@@ -1,0 +1,17 @@
+self.forces.push (i)->
+  m = i % self.D
+  F = 0
+  for j in [0...self.N] when j % self.D is m and j isnt i
+    dp = self.P[i] - self.P[j]
+    F += 1e-9 * 1 / (dp * dp)
+  F
+
+self.sizes = [.1, .2]
+
+self.constraints.push (P, i)->
+  m = i % self.D
+  for j in [0...self.N] when j % self.D is m and j isnt i
+    if P + self.sizes[m] > self.P[j] # There is an overlap in this direction
+      V[i] += -V[i] * 1.000001
+      console.log i, j, V[i]
+  P
