@@ -1,6 +1,6 @@
 angular.module('eau.simulation.spring', [
   'eau.simulation.service'
-  'simulation.simulation-template.template'
+  'simulation.template'
   'eau.simulation.arch'
   'graphing.scales'
   'graphing.svg'
@@ -11,7 +11,7 @@ angular.module('eau.simulation.spring', [
 ]
 .directive 'spring', ->
   restrict: 'E'
-  templateUrl: 'simulation/simulation-template'
+  templateUrl: 'simulation'
   controller: ($scope, SimulationFactory)->
     $scope.simulation = SimulationFactory.build 2,
       [

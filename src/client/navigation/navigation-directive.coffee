@@ -22,12 +22,12 @@ NavigationCtrl.$inject = ['SimulationNav']
 
 angular.module('eau.navigation', [
   'ui.router'
-  'navigation.navigation-template.template'
+  'navigation.template'
 ])
 .provider('SimulationNav', SimulationNav)
 .controller('NavigationCtrl', NavigationCtrl)
 .directive 'navigation', ->
   restrict: 'E'
-  templateUrl: 'navigation/navigation-template'
+  templateUrl: 'navigation'
   controller: 'NavigationCtrl'
   controllerAs: 'nav'

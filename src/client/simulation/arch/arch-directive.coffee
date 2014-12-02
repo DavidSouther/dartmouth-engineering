@@ -1,10 +1,10 @@
 angular.module('eau.simulation.arch', [
   'eau.navigation'
   'eau.simulation.arch.brick'
-  'simulation.arch.arch-template.template'
+  'simulation.arch.template'
 ])
 .directive 'arch', ->
   restrict: 'E'
-  templateUrl: 'simulation/arch/arch-template'
+  templateUrl: 'simulation/arch'
   scope:
     arch: '=bricks'
