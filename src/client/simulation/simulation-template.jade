@@ -1,16 +1,14 @@
 md-content(ng-init="simDetails = false")
+  md-toolbar.md-whiteframe-z1.toolbar
+    section(layout="row", layout-align="left center")
+      md-button(ng-click="simulation.tick(dt)", flex="10") Tick
+      md-button(
+        ng-click="simulation.toggle()"
+        flex="10"
+      ) {{ simulation.running ? 'Pause': 'Run' }}
+      md-button(ng-click="simulation.reset()", flex="10") Reset
+      md-text-float(flex="60", label="Milliseconds", ng-model="simulation.dt")
   md-list
-    md-item
-      md-item-content
-        div.md-tile-content
-          form(name="step", style="padding: 20px;")
-            section(layout="row", layout-align="center center")
-              md-button.md-raised(ng-click="simulation.tick(dt)") Tick
-              md-button.md-raised(
-                ng-click="simulation.toggle()"
-              ) {{ simulation.running ? 'Pause': 'Run' }}
-              md-text-float(label="Milliseconds", ng-model="simulation.dt")
-              md-button.md-raised(ng-click="simulation.reset()") Reset
     md-item(layout="row", layout-align="center")
       div
         arch(bricks="simulation.particles")
