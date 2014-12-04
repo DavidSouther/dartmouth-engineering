@@ -3,10 +3,7 @@
     "verbose": true,
     "root": "./src/client",
     "vendors": {
-      "prefix": [ "./node_modules" ],
-      "js": [
-        "d3-util/d3.js"
-      ],
+      "prefix": ["./node_modules"],
       "config": {
         "dependencies": {
           "rupert-config-angular-material": true
