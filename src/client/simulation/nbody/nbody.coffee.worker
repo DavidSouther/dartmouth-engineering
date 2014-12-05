@@ -13,5 +13,4 @@ self.constraints.push (P, i)->
   for j in [0...self.N] when j % self.D is m and j isnt i
     if P + self.sizes[m] > self.P[j] # There is an overlap in this direction
       V[i] += -V[i] * 1.000001
-      console.log i, j, V[i]
   P

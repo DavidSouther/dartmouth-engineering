@@ -7,13 +7,13 @@ class Particle
           @simulation.positions[@index * 2 + 1]
         ]
 
-SimulationFactory = (WorkerSvc, $rootScope)->
+SimulationFactory = (WorkerSvc, $rootScope, $log)->
   class Simulation
     constructor: (@N, @scripts, @generator)->
       @dt = 16
       @running = no
       @worker = WorkerSvc.get('/simulation/verlet.coffee')
-      @worker.addEventListener('error', ((e)->console.error(e)))
+      @worker.addEventListener('error', ((e)->$log.error(e)))
       @worker.addEventListener 'message', ({data})=>@[data.event]?(data)
       @positions = new Float64Array(@N * 2)
       @particles = (new Particle(@, i) for i in [0...@N])
@@ -55,6 +55,7 @@ SimulationFactory = (WorkerSvc, $rootScope)->
 SimulationFactory.$inject = [
   'WorkerSvc'
   '$rootScope'
+  '$log'
 ]
 
 angular.module('eau.simulation.service', [

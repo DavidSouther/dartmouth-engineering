@@ -1,0 +1,44 @@
+md-content(ng-init="simDetails = false")
+  md-toolbar.md-whiteframe-z1.toolbar
+    section(layout="row", layout-align="space-around")
+      md-text-float(flex, label="Density, in kg/m^3", ng-model="simulation.density")
+      md-text-float(flex, label="Elasticity, in Pa", ng-model="simulation.elasticity")
+    section(layout="row", layout-align="space-around")
+      md-text-float(flex, label="Base Cross Section, in m^2", ng-model="simulation.basearea")
+      md-text-float(flex, label="Top Cross Section, in m^2", ng-model="simulation.tiparea")
+      md-text-float(flex, label="Length, in m", ng-model="simulation.length")
+  md-list
+    md-item(layout="column", layout-align="space-between")
+      p(layout="row", layout-align="space-around")
+        b Applied Load:
+        | {{ simulation.applied() / 1000 | number:3 }} kN
+        b Buckling Load:
+        | {{ simulation.buckle() / 1000 | number:3 }} kN
+      div(flex, layout="row", layout-align="center center")
+        svg(
+          height="200px"
+          width="200px"
+          graph-scales="{\
+            x: ['linear', -50, 50], \
+            y: ['linear', 50, 0] \
+          }"
+        )
+          path(
+            stroke="black"
+            stroke-width="1px"
+            fill-opacity="0"
+            ng-attr-d="\
+              M{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
+              L{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 3) }}\
+              L{{ $scales.x(-Math.sqrt(simulation.tiparea) / 2) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(Math.sqrt(simulation.tiparea) / 2) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 3) }}\
+              L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
+              Z\
+            "
+          )
+      md-divider
+      md-button(
+        target="_new"
+        ng-attr-href="http://www.wolframalpha.com/input/?i=%28+pi%5E2+*+{{simulation.elasticity}}+*+%28{{simulation.basearea}}%29^2%2F12+%29+%2F+{{simulation.length}}%5E2+N"
+      ) View in WolframAlpha
