@@ -3,6 +3,7 @@ md-content(ng-init="simDetails = false")
     section(layout="row", layout-align="space-around")
       md-text-float(flex, label="Density, in kg/m^3", ng-model="simulation.density")
       md-text-float(flex, label="Elasticity, in Pa", ng-model="simulation.elasticity")
+      md-text-float(flex, label="Supported Weight, in kg", ng-model="simulation.supported")
     section(layout="row", layout-align="space-around")
       md-text-float(flex, label="Base Cross Section, in m^2", ng-model="simulation.basearea")
       md-text-float(flex, label="Top Cross Section, in m^2", ng-model="simulation.tiparea")
@@ -11,22 +12,26 @@ md-content(ng-init="simDetails = false")
     md-item(layout="column", layout-align="space-between")
       p(layout="row", layout-align="space-around")
         b Applied Load:
-        | {{ simulation.applied() / 1000 | number:3 }} kN
+        | {{ simulation.applied() | number:0 }} N
         b Buckling Load:
-        | {{ simulation.buckle() / 1000 | number:3 }} kN
+        | {{ simulation.buckle() / 1000 | number:0 }} N
       div(flex, layout="row", layout-align="center center")
         svg(
           height="200px"
           width="200px"
           graph-scales="{\
             x: ['linear', -50, 50], \
-            y: ['linear', 50, 0] \
+            y: ['linear', 50, 0], \
+            h: ['linear', 0, simulation.buckle(), 120, 0], \
           }"
+          graph-tick="$scales.h.domain([0, simulation.buckle()])"
         )
           path(
             stroke="black"
             stroke-width="1px"
-            fill-opacity="0"
+            ng-attr-fill="hsl({{ $scales.h(\
+                simulation.applied() < simulation.buckle() ? simulation.applied() : simulation.buckle()\
+              ) }}, 100%, 50%)"
             ng-attr-d="\
               M{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
               L{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 3) }}\
@@ -35,6 +40,16 @@ md-content(ng-init="simDetails = false")
               L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 3) }}\
               L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
               Z\
+            "
+          )
+          path(
+            ng-if="simulation.applied() > simulation.buckle()"
+            stroke="black"
+            stroke-width="1px"
+            fill-opacity="0"
+            ng-attr-d="\
+              M{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 4) }}\
+              L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 4) }}\
             "
           )
       md-divider

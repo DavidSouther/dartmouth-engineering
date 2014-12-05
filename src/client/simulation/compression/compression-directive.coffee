@@ -20,17 +20,19 @@ angular.module('eau.simulation.compression', [
       basearea: 8 * 8
       elasticity: '10e9'
       density: 0.27
+      supported: 0
     $scope.simulation.buckle = ->
       ba = parseFloat(s.basearea)
       l = parseFloat(s.length)
       e = parseFloat(s.elasticity)
       moment = (ba * ba) / 12
-      l2 = l * l
-      buckle = PI_SQUARED * e * moment / l2
+      buckle = PI_SQUARED * e * moment / (l * l)
       buckle
     $scope.simulation.applied = ->
       ba = parseFloat(s.basearea)
       ta = parseFloat(s.tiparea)
       l = parseFloat(s.length)
       volume = l * (ba + ta) / 2
-      parseFloat(s.density) * volume * GRAVITY
+      columnWeight = parseFloat(s.density) * volume * GRAVITY
+      supportedWeight = parseFloat(s.supported) * GRAVITY
+      columnWeight + supportedWeight
