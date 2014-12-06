@@ -2,6 +2,7 @@ PI_SQUARED = Math.PI * Math.PI
 GRAVITY = 9.81
 
 angular.module('eau.simulation.compression', [
+  'eau.simulation.compression.materials'
   'simulation.compression.template'
   'graphing.scales'
   'graphing.svg'
@@ -13,7 +14,9 @@ angular.module('eau.simulation.compression', [
 .directive 'compression', ->
   restrict: 'E'
   templateUrl: 'simulation/compression'
-  controller: ($scope, SimulationFactory)->
+  controller: ($scope, MaterialList)->
+    $scope.MaterialList = MaterialList
+    $scope.material = 'Granite'
     s = $scope.simulation =
       length: 32.2
       tiparea: 2 * 2
