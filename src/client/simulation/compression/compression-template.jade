@@ -8,7 +8,7 @@ md-content(ng-init="simDetails = false")
           span.material-property-label Density &nbsp;
           span.material-property-value {{ currentMaterial.density|number:0 }} &nbsp;
           span.material-property-label Elasticity &nbsp;
-          span.material-property-value {{ currentMaterial.elasticity }} &nbsp;
+          span.material-property-value {{ currentMaterial.elasticity | scientific }} &nbsp;
       md-input-group.supported-weight(flex, layout="column", layout-align="left center")
         div.supported-weight-label Supported Weight, in kg &nbsp;
           span.material-property-value {{ simulation.supported | number:0}}

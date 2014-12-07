@@ -4,6 +4,7 @@ GRAVITY = 9.81
 angular.module('eau.simulation.compression', [
   'eau.simulation.compression.materials'
   'simulation.compression.template'
+  'eau.utilities.scientific'
   'eau.simulation.compression.show-select'
   'graphing.scales'
   'graphing.svg'
