@@ -5,18 +5,20 @@ html(lang='en', ng-app='eau')
     meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
     meta(name='viewport', content='width=device-width,initial-scale=1')
 
+    //- base(href="/")
+
     title {{ title }}
 
     link(rel='stylesheet', href='vendors.css')
 
-    link(rel='stylesheet', href='/all.css')
-    link(rel='stylesheet', href='/screen.css', media="screen")
-    link(rel='stylesheet', href='/print.css', media="print")
+    link(rel='stylesheet', href='all.css')
+    link(rel='stylesheet', href='screen.css', media="screen")
+    link(rel='stylesheet', href='print.css', media="print")
 
     script(src="vendors.js")
 
     //- Comment below to disable real-time sockets.
-    script(src="socket.io/socket.io.js")
+    //- script(src="socket.io/socket.io.js")
 
   body(layout="horizontal")
     md-sidenav.md-whiteframe-z1.md-sidenav-left(
