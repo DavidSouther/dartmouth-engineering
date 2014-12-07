@@ -1,0 +1,6 @@
+md-dialog
+  md-content
+    md-list(layout="column")
+      md-action(ng-repeat="name in options")
+        md-button(ng-click="selected(name)") {{ name }}
+

@@ -1,12 +1,24 @@
 md-content(ng-init="simDetails = false")
   md-toolbar.md-whiteframe-z1.toolbar
     section(layout="row", layout-align="space-around")
-      select(ng-model="simulation.material")
-        option(ng-repeat="(name, properties) in MaterialList")
-          | {{ name }} ( {{ properties }} )
-      //- md-text-float(flex, label="Density, in kg/m^3", ng-model="simulation.density")
-      //- md-text-float(flex, label="Elasticity, in Pa", ng-model="simulation.elasticity")
-      md-text-float(flex, label="Supported Weight, in kg", ng-model="simulation.supported")
+      md-input-group.material(flex="33", layout-align="center center", ng-click="simulation.showMaterialList($event)")
+        div(flex, layout-align="center center")
+          span.material-name {{currentMaterial.material}}
+        div(flex, layout-align="center center")
+          span.material-property-label Density &nbsp;
+          span.material-property-value {{ currentMaterial.density|number:0 }} &nbsp;
+          span.material-property-label Elasticity &nbsp;
+          span.material-property-value {{ currentMaterial.elasticity }} &nbsp;
+      md-input-group.supported-weight(flex, layout="column", layout-align="left center")
+        div.supported-weight-label Supported Weight, in kg &nbsp;
+          span.material-property-value {{ simulation.supported | number:0}}
+        // md-slider(ng-model="simulation.supported", min="0", max="110")
+        md-slider(
+          ng-model="supportedWeightSlide",
+          ng-model-options="{getterSetter: true}",
+          min="0",
+          max="{{ 11 * simulation.buckle() }}"
+        )
     section(layout="row", layout-align="space-around")
       md-text-float(flex, label="Base Cross Section, in m^2", ng-model="simulation.basearea")
       md-text-float(flex, label="Top Cross Section, in m^2", ng-model="simulation.tiparea")
@@ -17,7 +29,7 @@ md-content(ng-init="simDetails = false")
         b Applied Load:
         | {{ simulation.applied() | number:0 }}&nbsp;N
         b Buckling Load:
-        | {{ simulation.buckle() / 1000 | number:0 }}&nbsp;N
+        | {{ simulation.buckle() | number:0 }}&nbsp;N
       div(flex, layout="row", layout-align="center center")
         svg(
           height="400px"
