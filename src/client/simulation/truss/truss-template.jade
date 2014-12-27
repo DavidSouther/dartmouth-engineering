@@ -1,0 +1,15 @@
+svg(
+  height="300px"
+  width="600px"
+  graph-scales="{\
+    x: ['linear', -5, 5], \
+    y: ['linear', 3.5, -1.5], \
+  }"
+)
+  line(
+    ng-repeat="beam in truss"
+    from="$scales(beam[0])"
+    to="$scales(beam[1])"
+    stroke="black"
+    stroke-width="2px"
+  )

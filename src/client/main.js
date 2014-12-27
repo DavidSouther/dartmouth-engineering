@@ -5,5 +5,6 @@ angular.module('eau', [
   'eau.simulation',
   'eau.simulation.spring',
   'eau.simulation.nbody',
-  'eau.simulation.compression'
+  'eau.simulation.compression',
+  'eau.simulation.truss'
 ]);
