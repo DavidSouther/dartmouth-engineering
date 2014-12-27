@@ -4,6 +4,7 @@
     "start": "node ./app.js",
     "test": "grunt",
     "features": "grunt features",
+    "watch": "grunt watcher",
     "rename": "echo 'Coming Soon!'"
   },
   "dependencies": {

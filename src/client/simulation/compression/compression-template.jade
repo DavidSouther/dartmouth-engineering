@@ -9,6 +9,12 @@ md-content(ng-init="simDetails = false")
           span.material-property-value {{ currentMaterial.density|number:0 }} &nbsp;
           span.material-property-label Elasticity &nbsp;
           span.material-property-value {{ currentMaterial.elasticity | scientific }} &nbsp;
+      md-input-group.material(flex="33", layout-align="center center", ng-click="simulation.showMomentList($event)")
+        div(flex, layout-align="center center")
+          span.moment-name {{currentShape.shape}}
+        div(flex, layout-align="center center")
+          span.material-property-label Description &nbsp;
+          span.material-property-value {{ currentShape.description }} &nbsp;
       md-input-group.supported-weight(flex, layout="column", layout-align="left center")
         div.supported-weight-label Supported Weight, in kg &nbsp;
           span.material-property-value {{ simulation.supported | number:0}}
@@ -20,8 +26,7 @@ md-content(ng-init="simDetails = false")
           max="{{ 11 * simulation.buckle() }}"
         )
     section(layout="row", layout-align="space-around")
-      md-text-float(flex, label="Base Cross Section, in m^2", ng-model="simulation.basearea")
-      md-text-float(flex, label="Top Cross Section, in m^2", ng-model="simulation.tiparea")
+      md-text-float(flex, label="Base Diameter, in m", ng-model="simulation.base")
       md-text-float(flex, label="Length, in m", ng-model="simulation.length")
   md-list
     md-item(layout="column", layout-align="space-between")
@@ -48,10 +53,10 @@ md-content(ng-init="simDetails = false")
                 simulation.applied() < simulation.buckle() ? simulation.applied() : simulation.buckle()\
               ) }}, 100%, 50%)"
             ng-attr-d="\
-              M{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
-              L{{ $scales.x(-Math.sqrt(simulation.tiparea) / 2) }},{{ $scales.y(simulation.length) }}\
-              L{{ $scales.x(Math.sqrt(simulation.tiparea) / 2) }},{{ $scales.y(simulation.length) }}\
-              L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(0) }}\
+              M{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(0) }}\
+              L{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(0) }}\
               Z\
             "
           )
@@ -61,8 +66,8 @@ md-content(ng-init="simDetails = false")
             stroke-width="1px"
             fill-opacity="0"
             ng-attr-d="\
-              M{{ $scales.x(-Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 4) }}\
-              L{{ $scales.x(Math.sqrt(simulation.basearea) / 2) }},{{ $scales.y(simulation.length / 4) }}\
+              M{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length / 4) }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length / 4) }}\
             "
           )
       md-divider

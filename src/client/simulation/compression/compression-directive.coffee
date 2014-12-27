@@ -17,16 +17,23 @@ angular.module('eau.simulation.compression', [
 .directive 'compression', ->
   restrict: 'E'
   templateUrl: 'simulation/compression'
-  controller: ($scope, MaterialList, $mdDialog)->
+  controller: ($scope, MaterialList, MomentShapes, $mdDialog)->
     setCurrentMaterial = (materialName) ->
-      if not MaterialList.hasOwnProperty materialName
-        return
+      return unless MaterialList[materialName]?
       $scope.currentMaterial =
         material: materialName
         density: MaterialList[materialName].density
         elasticity: MaterialList[materialName].elasticity
 
+    setCurrentShape = (shape)->
+      return unless MomentShapes[shape]?
+      $scope.currentShape =
+        shape: shape
+        description: MomentShapes[shape].description || shape
+        moment: MomentShapes[shape].moment
+
     setCurrentMaterial 'Granite'
+    setCurrentShape 'Brick'
 
     _supportWeightSlide = 0
     $scope.supportedWeightSlide = (newVal) ->
@@ -41,19 +48,19 @@ angular.module('eau.simulation.compression', [
     s = $scope.simulation =
       length: 32.2
       tiparea: 2 * 2
-      basearea: 8 * 8
+      base: 8
       supported: 0
 
     $scope.simulation.buckle = ->
-      ba = parseFloat(s.basearea)
+      ba = parseFloat(s.base)
       l = parseFloat(s.length)
       e = $scope.currentMaterial.elasticity
-      moment = (ba * ba) / 12
+      moment = $scope.currentShape.moment(ba)
       buckle = PI_SQUARED * e * moment / (l * l)
       buckle
 
     $scope.simulation.applied = ->
-      ba = parseFloat(s.basearea)
+      ba = parseFloat(s.base)
       ta = parseFloat(s.tiparea)
       l = parseFloat(s.length)
       volume = l * (ba + ta) / 2
@@ -75,4 +82,20 @@ angular.module('eau.simulation.compression', [
       $mdDialog.show(showObj)
         .then( (materialName) ->
           setCurrentMaterial materialName
+        )
+
+    $scope.simulation.showMomentList = (event) ->
+      event.preventDefault
+      showObj =
+        templateUrl: 'simulation/compression/show-select'
+        controller: 'ShowSelectCtrl'
+        parent: event.target
+        hasBackdrop: false
+        clickOutsideToClose: false
+        locals:
+          options: Object.keys MomentShapes
+
+      $mdDialog.show(showObj)
+        .then( (momentName) ->
+          setCurrentShape momentName
         )

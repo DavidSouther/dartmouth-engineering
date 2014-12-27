@@ -3,7 +3,6 @@ angular.module('eau.simulation.compression.show-select', [
   'ngMaterial'
 ])
 .controller 'ShowSelectCtrl', ($scope, $mdDialog, options) ->
-    $scope.options = options
-    $scope.selected = (name) ->
-      $mdDialog.hide(name)
-
+  $scope.options = options
+  $scope.selected = (name) ->
+    $mdDialog.hide(name)
