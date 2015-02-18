@@ -53,10 +53,38 @@ md-content(ng-init="simDetails = false")
                 simulation.applied() < simulation.buckle() ? simulation.applied() : simulation.buckle()\
               ) }}, 100%, 50%)"
             ng-attr-d="\
-              M{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(0) }}\
-              L{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length) }}\
-              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length) }}\
-              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(0) }}\
+              M{{ $scales.x(-Math.sqrt(simulation.base)) }},{{ $scales.y(0) }}\
+              L{{ $scales.x(-Math.sqrt(simulation.base)) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(0) }},{{ $scales.y(simulation.length) + 7 }}\
+              L{{ $scales.x(0) }},{{ $scales.y(0) + 7 }}\
+              Z\
+            "
+          )
+          path(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="hsl({{ $scales.h(\
+                simulation.applied() < simulation.buckle() ? simulation.applied() : simulation.buckle()\
+              ) }}, 100%, 50%)"
+            ng-attr-d="\
+              M{{ $scales.x(0) }},{{ $scales.y(0) + 7 }}\
+              L{{ $scales.x(0) }},{{ $scales.y(simulation.length) + 7 }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length) - 7 }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(0) - 7 }}\
+              Z\
+            "
+          )
+          path(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="hsl({{ $scales.h(\
+                simulation.applied() < simulation.buckle() ? simulation.applied() : simulation.buckle()\
+              ) }}, 100%, 50%)"
+            ng-attr-d="\
+              M{{ $scales.x(-Math.sqrt(simulation.base)) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x( 2.5 * -Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length) - 14 }} \
+              L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length) - 7 }}\
+              L{{ $scales.x(0) }},{{ $scales.y(simulation.length) + 7 }}\
               Z\
             "
           )
@@ -66,8 +94,8 @@ md-content(ng-init="simDetails = false")
             stroke-width="1px"
             fill-opacity="0"
             ng-attr-d="\
-              M{{ $scales.x(-Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length / 4) }}\
-              L{{ $scales.x(Math.sqrt(simulation.base) / 2) }},{{ $scales.y(simulation.length / 4) }}\
+              M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
+              L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
             "
           )
       md-divider
