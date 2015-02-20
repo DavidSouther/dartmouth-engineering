@@ -68,6 +68,9 @@ angular.module('eau.simulation.compression', [
       supportedMass = parseFloat(s.supported)
       (columnMass + supportedMass) * GRAVITY
 
+    $scope.simulation.deflection = (n)->
+      n * Math.min(1, ($scope.simulation.applied() / $scope.simulation.buckle()))
+
     $scope.simulation.showMaterialList = (event) ->
       event.preventDefault
       showObj =
