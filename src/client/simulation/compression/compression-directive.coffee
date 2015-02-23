@@ -24,6 +24,8 @@ angular.module('eau.simulation.compression', [
         material: materialName
         density: MaterialList[materialName].density
         elasticity: MaterialList[materialName].elasticity
+        color: MaterialList[materialName].color
+        stress: MaterialList[materialName].stress
 
     setCurrentShape = (shape)->
       return unless MomentShapes[shape]?
@@ -31,9 +33,11 @@ angular.module('eau.simulation.compression', [
         shape: shape
         description: MomentShapes[shape].description || shape
         moment: MomentShapes[shape].moment
+        crossSection: MomentShapes[shape].crossSection
 
-    setCurrentMaterial 'Granite'
-    setCurrentShape 'Brick'
+    setCurrentMaterial 'Steel'
+    # setCurrentShape 'Square'
+    setCurrentShape 'Hollow Square'
 
     _supportWeightSlide = 0
     $scope.supportedWeightSlide = (newVal) ->
@@ -46,13 +50,17 @@ angular.module('eau.simulation.compression', [
       _supportWeightSlide = newVal
 
     s = $scope.simulation =
-      length: 32.2
-      tiparea: 2 * 2
-      base: 8
+      length: 20
+      # base: .75
+      base: 4
       supported: 0
 
-    $scope.simulation.buckle = ->
+    $scope.simulation.crossSection = ->
       ba = parseFloat(s.base)
+      $scope.currentShape.crossSection(ba)
+
+    $scope.simulation.buckle = ->
+      ba = $scope.simulation.crossSection()
       l = parseFloat(s.length)
       e = $scope.currentMaterial.elasticity
       moment = $scope.currentShape.moment(ba)
@@ -60,16 +68,25 @@ angular.module('eau.simulation.compression', [
       buckle
 
     $scope.simulation.applied = ->
-      ba = parseFloat(s.base)
-      ta = parseFloat(s.tiparea)
+      ba = $scope.simulation.crossSection()
       l = parseFloat(s.length)
-      volume = l * (ba + ta) / 2
+      volume = l * ba
       columnMass = $scope.currentMaterial.density * volume
       supportedMass = parseFloat(s.supported)
       (columnMass + supportedMass) * GRAVITY
 
+    $scope.simulation.compression = ->
+      # allowable stress *cross-sectional area
+      $scope.currentMaterial.stress * $scope.simulation.crossSection()
+
     $scope.simulation.deflection = (n)->
-      n * Math.min(1, ($scope.simulation.applied() / $scope.simulation.buckle()))
+      a = $scope.simulation.applied()
+      b = $scope.simulation.buckle()
+      ba = parseFloat(s.base)
+      if a > b
+        Math.min ba * (a / b), 2
+      else
+        0
 
     $scope.simulation.showMaterialList = (event) ->
       event.preventDefault

@@ -20,7 +20,7 @@ html(lang='en', ng-app='eau')
     //- Comment below to disable real-time sockets.
     //- script(src="socket.io/socket.io.js")
 
-  body(layout="horizontal")
+  body(layout="row")
     md-sidenav.md-whiteframe-z1.md-sidenav-left(
       md-is-locked-open="true"
       layout="column"
@@ -34,9 +34,6 @@ html(lang='en', ng-app='eau')
       layout="column"
       flex
     )
-      md-toolbar
-        h2.md-toolbar-tools
-          span {{ title }}
       md-content
         ui-view(name='simulation')
 
