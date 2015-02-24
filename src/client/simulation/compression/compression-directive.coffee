@@ -37,7 +37,7 @@ angular.module('eau.simulation.compression', [
 
     setCurrentMaterial 'Steel'
     # setCurrentShape 'Square'
-    setCurrentShape 'Hollow Square'
+    setCurrentShape 'Hollow Pipe'
 
     _supportWeightSlide = 0
     $scope.supportedWeightSlide = (newVal) ->
@@ -50,9 +50,8 @@ angular.module('eau.simulation.compression', [
       _supportWeightSlide = newVal
 
     s = $scope.simulation =
-      length: 20
-      # base: .75
-      base: 4
+      length: 5
+      base: .5
       supported: 0
 
     $scope.simulation.crossSection = ->

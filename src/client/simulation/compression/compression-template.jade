@@ -16,7 +16,11 @@ md-content(ng-init="simDetails = false")
         div(flex, layout-align="center center")
           span.moment-name {{currentShape.shape}}
     section(layout="row", layout-align="space-around")
-      md-input-group.supported-weight(layout="column", layout-align="left center")
+      md-input-group.supported-weight(
+        layout="column",
+        layout-align="left center",
+        flex="30"
+      )
         div.supported-weight-label Supported Weight&nbsp;
           span.material-property-value {{ simulation.supported | number:0}}
           | kg
@@ -26,24 +30,32 @@ md-content(ng-init="simDetails = false")
           min="0",
           max="{{ 11 * simulation.buckle() }}"
         )
-      md-input-group.supported-weight(layout="column", layout-align="left center")
+      md-input-group.supported-weight(
+        layout="column",
+        layout-align="left center",
+        flex="30"
+      )
         div.supported-weight-label Base Diameter&nbsp;
           span.material-property-value {{ simulation.base | number:2}}
           | m
         md-slider(
           ng-model="simulation.base",
-          min="0.25",
-          max="4",
+          min="0.1",
+          max="2",
           step=".05"
         )
-      md-input-group.supported-weight(layout="column", layout-align="left center")
+      md-input-group.supported-weight(
+        layout="column",
+        layout-align="left center",
+        flex="30"
+      )
         div.supported-weight-label Length&nbsp;
           span.material-property-value {{ simulation.length | number:0}}
           | m
         md-slider(
           ng-model="simulation.length",
-          min="3",
-          max="30",
+          min="1",
+          max="15",
           step=".25"
         )
   md-list
@@ -63,8 +75,10 @@ md-content(ng-init="simDetails = false")
           height="400px"
           width="200px"
           graph-scales="{\
-            x: ['linear', -3, 3], \
-            y: ['linear', 30, 0], \
+            x: ['linear', -3, 2], \
+            y: ['linear', 17, 0], \
+            dx: ['linear', 0, 7.75, 0, 200], \
+            dy: ['linear', 0, 25, 0, 400], \
             h: ['linear', 0, simulation.buckle(), 120, 0], \
           }"
           graph-tick="$scales.h.domain([0, simulation.buckle()])"
@@ -93,7 +107,7 @@ md-content(ng-init="simDetails = false")
               stroke-width="1px"
               ng-attr-fill="{{currentMaterial.color}}"
               ng-attr-d="\
-                M{{ $scales.x( simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
+                M{{ $scales.x(simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
                 Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3 - simulation.base / 4) }},\
                   {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2 - simulation.base / 4) }}\
                 Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3 - simulation.base / 3) }},\
@@ -119,7 +133,7 @@ md-content(ng-init="simDetails = false")
               "
             )
           g#hollow_square(ng-if="currentShape.shape == 'Hollow Square'")
-            path#square_top(
+            path#hollow_square_top(
               stroke="black"
               stroke-width="1px"
               ng-attr-fill="{{currentMaterial.color}}"
@@ -133,16 +147,55 @@ md-content(ng-init="simDetails = false")
                 Z\
               "
             )
-          path(
-            ng-if="simulation.applied() > simulation.compression()"
-            stroke="black"
-            stroke-width="1px"
-            fill-opacity="0"
-            ng-attr-d="\
-              M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
-              L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
-            "
-          )
+          g#pipe(ng-if="currentShape.shape == 'Pipe' || currentShape.shape == 'Hollow Pipe'")
+            path#pipe_face(
+              stroke="black"
+              stroke-width="1px"
+              ng-attr-fill="{{currentMaterial.color}}"
+              ng-attr-d="\
+                M{{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
+                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3) }},\
+                  {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2) }} \
+                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3) }},\
+                  {{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
+                L {{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
+                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y(2 *simulation.length / 3) }},\
+                  {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 2) }}\
+                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 3) }},\
+                  {{ $scales.x( simulation.base) }},{{ $scales.y(0) }}\
+                Q {{ $scales.x( simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
+                  {{ $scales.x( simulation.base * 1/4) }},{{ $scales.y(- simulation.base * 3/4) }}\
+                Q {{ $scales.x(-simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
+                  {{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
+              "
+            )
+            ellipse#pipe_top(
+              stroke="black"
+              stroke-width="1px"
+              ng-attr-fill="{{currentMaterial.color}}"
+              center="$scales([0, simulation.length])"
+              ng-attr-rx="{{ $scales.dx( simulation.base ) }}"
+              ng-attr-ry="{{ $scales.dy(simulation.base * 3/4) }}"
+            )
+          g#pipe(ng-if="currentShape.shape == 'Hollow Pipe'")
+            ellipse#hollow_pipe_top(
+              stroke="black"
+              stroke-width="1px"
+              ng-attr-fill="{{currentMaterial.color}}"
+              center="$scales([0, simulation.length])"
+              ng-attr-rx="{{ $scales.dx( simulation.base * 3/4 ) }}"
+              ng-attr-ry="{{ $scales.dy(simulation.base * 9/16 ) }}"
+            )
+        path(
+          ng-if="simulation.applied() > simulation.compression()"
+          stroke="black"
+          stroke-width="1px"
+          fill-opacity="0"
+          ng-attr-d="\
+            M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
+            L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
+          "
+        )
       md-divider
       md-button(
         target="_new"
