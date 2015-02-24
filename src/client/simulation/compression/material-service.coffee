@@ -2,21 +2,41 @@ angular.module('eau.simulation.compression.materials', [
 
 ])
 .value 'MaterialList',
+  "Concrete":
+    density: 23e3
+    elasticity: 20e9
+    stress: 70e6
+    color: 'bisque'
   "Granite":
     density: 27e3
     elasticity: 80e9
     stress: 150e6
     color: 'slategrey'
-  "Wood":
-    density: 6e3
-    elasticity: 10e9
-    stress: 30e6
-    color: 'brown'
+  "Plastic":
+    density: 27e3
+    elasticity: 2e9
+    stress: 50e6
+    color: 'honeydew'
+  "Glass":
+    density: 10e3
+    elasticity: 50e9
+    stress: 100e6
+    color: "paleturquoise"
   "Steel":
     density: 77e3
     elasticity: 200e9
     stress: 250e6
     color: 'lightsteelblue'
+  "Wood":
+    density: 6e3
+    elasticity: 10e9
+    stress: 30e6
+    color: 'brown'
+  "Copper":
+    density: 87e3
+    elasticity: 100e9
+    stress: 150e6
+    color: "sienna"
 
 .value 'MomentShapes',
   "Square":
