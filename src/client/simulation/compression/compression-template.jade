@@ -1,10 +1,22 @@
-md-content(ng-init="simDetails = false")
+md-content
   md-toolbar.md-whiteframe-z1.toolbar
-    section(layout="row", layout-align="space-around")
-      md-input-group.material(flex="33", layout-align="center center", ng-click="simulation.showMaterialList($event)")
-        div(flex, layout-align="center center")
-          span.material-name {{currentMaterial.material}}
-        div(flex, layout-align="center center")
+    section(
+      layout="row",
+      layout-align="space-around"
+    )
+      md-content.md-padding(
+        flex="50"
+      )
+        md-select(
+          ng-model="materialName"
+          placeholder="Material"
+          multiple=false
+        )
+          md-option(
+            ng-repeat="material in materials"
+            ng-value="material"
+          ) {{ material }}
+        div
           span.material-property-label Density &nbsp;
           span.material-property-value {{ currentMaterial.density|number:0 }}&nbsp;
           span.material-property-label kN/m3
@@ -12,30 +24,41 @@ md-content(ng-init="simDetails = false")
           span.material-property-label Elasticity &nbsp;
           span.material-property-value {{ currentMaterial.elasticity | scientific }}&nbsp;
           span.material-property-label GPa
-      md-input-group.material(flex="33", layout-align="center center", ng-click="simulation.showMomentList($event)")
-        div(flex, layout-align="center center")
-          span.moment-name {{currentShape.shape}}
-    section(layout="row", layout-align="space-around")
-      md-input-group.supported-weight(
-        layout="column",
-        layout-align="left center",
-        flex="30"
+      md-content.md-padding(
+        flex="50"
       )
-        div.supported-weight-label Supported Weight&nbsp;
-          span.material-property-value {{ simulation.supported | number:0}}
-          | kg
-        md-slider(
-          ng-model="supportedWeightSlide",
-          ng-model-options="{getterSetter: true}",
-          min="0",
-          max="{{ 11 * simulation.buckle() }}"
+        md-select(
+          placeholder="Shape"
+          ng-model="shapeName"
         )
-      md-input-group.supported-weight(
+          md-option(
+            ng-repeat="shape in shapes"
+            ng-value="shape"
+          ) {{ shape }}
+    section(layout="row", layout-align="space-around")
+      md-content.md-padding(
+        flex="33"
         layout="column",
         layout-align="left center",
-        flex="30"
       )
-        div.supported-weight-label Base Diameter&nbsp;
+        div.supported-weight-label
+          | Applied&nbsp;Load
+          br
+          span.material-property-value {{ simulation.applied / 3 | number:0}}
+          | kN
+        md-slider(
+          ng-model="simulation.applied",
+          min="{{ simulation.internal() }}",
+          max="{{ 1.1 * simulation.failure() }}"
+        )
+      md-content.md-padding(
+        flex="33"
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Base&nbsp;Diameter
+          br
           span.material-property-value {{ simulation.base | number:2}}
           | m
         md-slider(
@@ -44,12 +67,14 @@ md-content(ng-init="simDetails = false")
           max="2",
           step=".05"
         )
-      md-input-group.supported-weight(
+      md-content.md-padding(
+        flex="33"
         layout="column",
         layout-align="left center",
-        flex="30"
       )
-        div.supported-weight-label Length&nbsp;
+        div.supported-weight-label
+          | Length&nbsp;
+          br
           span.material-property-value {{ simulation.length | number:0}}
           | m
         md-slider(
@@ -58,146 +83,154 @@ md-content(ng-init="simDetails = false")
           max="15",
           step=".25"
         )
-  md-list
-    md-item(layout="column", layout-align="space-between")
-      div(layout="row", layout-align="space-around")
-        span(layout="column")
-          b Applied Load:
-          | {{ simulation.applied() | number:0 }}&nbsp;N
-        span(layout="column")
-          b Buckling Load:
-          | {{ simulation.buckle() | number:0 }}&nbsp;N
-        span(layout="column")
-          b Compressive Load:
-          | {{ simulation.compression() | number:0 }}&nbsp;N
-      div(flex, layout="row", layout-align="center center")
-        svg(
-          height="400px"
-          width="200px"
-          graph-scales="{\
-            x: ['linear', -3, 2], \
-            y: ['linear', 17, 0], \
-            dx: ['linear', 0, 7.75, 0, 200], \
-            dy: ['linear', 0, 25, 0, 400], \
-            h: ['linear', 0, simulation.buckle(), 120, 0], \
+  div(
+    layout="row",
+    layout-align="space-around"
+  )
+    md-content.md-padding(
+      flex="30",
+      layout="column"
+    )
+      div(
+        flex="10",
+        layout="column"
+      )
+        md-button.md-raised(
+          ng-class="{\
+            'md-warn': simulation.failed()\
           }"
-          graph-tick="$scales.h.domain([0, simulation.buckle()])"
         )
-          g#square(ng-if="currentShape.shape == 'Square' || currentShape.shape == 'Hollow Square'")
-            path#square_face(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              ng-attr-d="\
-                M{{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
-                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3) }},\
-                  {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2) }} \
-                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3) }},\
-                  {{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
-                L{{ $scales.x( simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
-                Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3 - simulation.base / 4) }},\
-                  {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2 - simulation.base / 4) }}\
-                Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3 - simulation.base / 3) }},\
-                  {{ $scales.x(simulation.base / 4)}},{{ $scales.y( -3 * simulation.base / 4) }}\
-                Z\
-              "
-            )
-            path#square_side(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              ng-attr-d="\
-                M{{ $scales.x(simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
-                Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3 - simulation.base / 4) }},\
-                  {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2 - simulation.base / 4) }}\
-                Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3 - simulation.base / 3) }},\
-                  {{ $scales.x(simulation.base / 4)}},{{ $scales.y( -3 * simulation.base / 4) }}\
-                L{{ $scales.x( simulation.base) }},{{ $scales.y( 0 ) }}\
-                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 3) }},\
-                  {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 2) }}\
-                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y(2 *simulation.length / 3) }},\
-                  {{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
-                Z\
-              "
-            )
-            path#square_top(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              ng-attr-d="\
-                M{{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
-                L{{ $scales.x(-simulation.base * 1/4) }},{{ $scales.y(simulation.length + simulation.base * 3/4) }} \
-                L{{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
-                L{{ $scales.x( simulation.base * 1/4) }},{{ $scales.y(simulation.length - simulation.base * 3/4) }}\
-                Z\
-              "
-            )
-          g#hollow_square(ng-if="currentShape.shape == 'Hollow Square'")
-            path#hollow_square_top(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              ng-attr-d="\
-                M{{ $scales.x(-simulation.base * 3/4) }},{{ $scales.y(simulation.length) }}\
-                L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length + (simulation.base * 3/4 * 3/4) ) }} \
-                L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length - (simulation.base * 11/32) ) }} \
-                L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length + (simulation.base * 3/4 * 3/4) ) }} \
-                L{{ $scales.x( simulation.base * 3/4) }},{{ $scales.y(simulation.length) }}\
-                L{{ $scales.x( simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length - (simulation.base * 3/4 * 3/4) ) }}\
-                Z\
-              "
-            )
-          g#pipe(ng-if="currentShape.shape == 'Pipe' || currentShape.shape == 'Hollow Pipe'")
-            path#pipe_face(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              ng-attr-d="\
-                M{{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
-                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3) }},\
-                  {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2) }} \
-                Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3) }},\
-                  {{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
-                L {{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
-                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y(2 *simulation.length / 3) }},\
-                  {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 2) }}\
-                Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 3) }},\
-                  {{ $scales.x( simulation.base) }},{{ $scales.y(0) }}\
-                Q {{ $scales.x( simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
-                  {{ $scales.x( simulation.base * 1/4) }},{{ $scales.y(- simulation.base * 3/4) }}\
-                Q {{ $scales.x(-simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
-                  {{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
-              "
-            )
-            ellipse#pipe_top(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              center="$scales([0, simulation.length])"
-              ng-attr-rx="{{ $scales.dx( simulation.base ) }}"
-              ng-attr-ry="{{ $scales.dy(simulation.base * 3/4) }}"
-            )
-          g#pipe(ng-if="currentShape.shape == 'Hollow Pipe'")
-            ellipse#hollow_pipe_top(
-              stroke="black"
-              stroke-width="1px"
-              ng-attr-fill="{{currentMaterial.color}}"
-              center="$scales([0, simulation.length])"
-              ng-attr-rx="{{ $scales.dx( simulation.base * 3/4 ) }}"
-              ng-attr-ry="{{ $scales.dy(simulation.base * 9/16 ) }}"
-            )
-        path(
-          ng-if="simulation.applied() > simulation.compression()"
-          stroke="black"
-          stroke-width="1px"
-          fill-opacity="0"
-          ng-attr-d="\
-            M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
-            L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
-          "
-        )
-      md-divider
-      md-button(
-        target="_new"
-        ng-attr-href="http://www.wolframalpha.com/input/?i=%28+pi%5E2+*+{{simulation.elasticity}}+*+%28{{simulation.basearea}}%29^2%2F12+%29+%2F+{{simulation.length}}%5E2+N"
-      ) View in WolframAlpha
+          | Column&nbsp;Stress:
+          br
+          | {{ simulation.failed() ? 'FAILURE' : 'Nominal' }}
+      div(flex="10", layout="column")
+        b Buckling Load:
+        | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
+      div(flex="10", layout="column")
+        b Compressive Load:
+        | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
+      div(flex)
+    div(flex, layout="row", layout-align="center center")
+      svg(
+        height="400px"
+        width="200px"
+        graph-scales="{\
+          x: ['linear', -3, 2], \
+          y: ['linear', 17, 0], \
+          dx: ['linear', 0, 7.75, 0, 200], \
+          dy: ['linear', 0, 25, 0, 400], \
+        }"
+      )
+        g#square(ng-if="currentShape.shape == 'Square' || currentShape.shape == 'Hollow Square'")
+          path#square_face(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
+              Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3) }},\
+                {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2) }} \
+              Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3) }},\
+                {{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x( simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
+              Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3 - simulation.base / 4) }},\
+                {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2 - simulation.base / 4) }}\
+              Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3 - simulation.base / 3) }},\
+                {{ $scales.x(simulation.base / 4)}},{{ $scales.y( -3 * simulation.base / 4) }}\
+              Z\
+            "
+          )
+          path#square_side(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            ng-attr-d="\
+              M{{ $scales.x(simulation.base / 4) }},{{ $scales.y(simulation.length - (3 * simulation.base / 4)) }}\
+              Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3 - simulation.base / 4) }},\
+                {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2 - simulation.base / 4) }}\
+              Q {{ $scales.x(simulation.base / 4 - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3 - simulation.base / 3) }},\
+                {{ $scales.x(simulation.base / 4)}},{{ $scales.y( -3 * simulation.base / 4) }}\
+              L{{ $scales.x( simulation.base) }},{{ $scales.y( 0 ) }}\
+              Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 3) }},\
+                {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 2) }}\
+              Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y(2 *simulation.length / 3) }},\
+                {{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
+              Z\
+            "
+          )
+          path#square_top(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(-simulation.base * 1/4) }},{{ $scales.y(simulation.length + simulation.base * 3/4) }} \
+              L{{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x( simulation.base * 1/4) }},{{ $scales.y(simulation.length - simulation.base * 3/4) }}\
+              Z\
+            "
+          )
+        g#hollow_square(ng-if="currentShape.shape == 'Hollow Square'")
+          path#hollow_square_top(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.base * 3/4) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length + (simulation.base * 3/4 * 3/4) ) }} \
+              L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length - (simulation.base * 11/32) ) }} \
+              L{{ $scales.x(-simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length + (simulation.base * 3/4 * 3/4) ) }} \
+              L{{ $scales.x( simulation.base * 3/4) }},{{ $scales.y(simulation.length) }}\
+              L{{ $scales.x( simulation.base * 1/4 * 3/4) }},{{ $scales.y(simulation.length - (simulation.base * 3/4 * 3/4) ) }}\
+              Z\
+            "
+          )
+        g#pipe(ng-if="currentShape.shape == 'Pipe' || currentShape.shape == 'Hollow Pipe'")
+          path#pipe_face(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
+              Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 3) }},\
+                {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(simulation.length / 2) }} \
+              Q {{ $scales.x(-simulation.base - simulation.deflection(5) )}},{{ $scales.y(2 * simulation.length / 3) }},\
+                {{ $scales.x(-simulation.base) }},{{ $scales.y(simulation.length) }}\
+              L {{ $scales.x( simulation.base) }},{{ $scales.y(simulation.length) }}\
+              Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y(2 *simulation.length / 3) }},\
+                {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 2) }}\
+              Q {{ $scales.x( simulation.base - simulation.deflection(5)) }},{{ $scales.y( simulation.length / 3) }},\
+                {{ $scales.x( simulation.base) }},{{ $scales.y(0) }}\
+              Q {{ $scales.x( simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
+                {{ $scales.x( simulation.base * 1/4) }},{{ $scales.y(- simulation.base * 3/4) }}\
+              Q {{ $scales.x(-simulation.base) }}, {{ $scales.y(- simulation.base * 3/4) }}\
+                {{ $scales.x(-simulation.base) }},{{ $scales.y(0) }}\
+            "
+          )
+          ellipse#pipe_top(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            center="$scales([0, simulation.length])"
+            ng-attr-rx="{{ $scales.dx( simulation.base ) }}"
+            ng-attr-ry="{{ $scales.dy(simulation.base * 3/4) }}"
+          )
+        g#pipe(ng-if="currentShape.shape == 'Hollow Pipe'")
+          ellipse#hollow_pipe_top(
+            stroke="black"
+            stroke-width="1px"
+            ng-attr-fill="{{currentMaterial.color}}"
+            center="$scales([0, simulation.length])"
+            ng-attr-rx="{{ $scales.dx( simulation.base * 3/4 ) }}"
+            ng-attr-ry="{{ $scales.dy(simulation.base * 9/16 ) }}"
+          )
+      path(
+        ng-if="simulation.applied() > simulation.compression()"
+        stroke="black"
+        stroke-width="1px"
+        fill-opacity="0"
+        ng-attr-d="\
+          M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
+          L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
+        "
+      )

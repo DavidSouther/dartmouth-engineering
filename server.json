@@ -4,11 +4,14 @@
     "root": "./src/client",
     "vendors": {
       "prefix": ["./node_modules"],
-      "config": {
-        "dependencies": {
-          "rupert-config-angular-material": true
-        }
-      }
+      "js": [
+        "flaming-sansa/www/vendors.js",
+        "flaming-sansa/www/application.js",
+        "flaming-sansa/www/templates.js"
+      ],
+      "css": [
+        "flaming-sansa/www/all.css"
+      ]
     }
   },
   "tls": false,

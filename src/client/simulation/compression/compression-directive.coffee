@@ -20,6 +20,7 @@ angular.module('eau.simulation.compression', [
   controller: ($scope, MaterialList, MomentShapes, $mdDialog)->
     setCurrentMaterial = (materialName) ->
       return unless MaterialList[materialName]?
+      $scope.materialName = materialName
       $scope.currentMaterial =
         material: materialName
         density: MaterialList[materialName].density
@@ -29,30 +30,31 @@ angular.module('eau.simulation.compression', [
 
     setCurrentShape = (shape)->
       return unless MomentShapes[shape]?
+      $scope.shapeName = shape
       $scope.currentShape =
         shape: shape
         description: MomentShapes[shape].description || shape
         moment: MomentShapes[shape].moment
         crossSection: MomentShapes[shape].crossSection
 
+    $scope.materials = Object.keys MaterialList
+    $scope.shapes = Object.keys MomentShapes
     setCurrentMaterial 'Steel'
-    # setCurrentShape 'Square'
-    setCurrentShape 'Hollow Pipe'
+    setCurrentShape 'Square'
 
-    _supportWeightSlide = 0
-    $scope.supportedWeightSlide = (newVal) ->
-      # This is being called way too much it's an issue
-      # Don't know what the best solution might be
-      if not angular.isDefined newVal
-        return _supportWeightSlide
-      convertedVal = newVal / 100
-      $scope.simulation.supported = convertedVal
-      _supportWeightSlide = newVal
+    $scope.$watch 'materialName', (newMaterial)->
+      setCurrentMaterial(newMaterial)
+
+    $scope.$watch 'shapeName', (newShape)->
+      setCurrentShape newShape
 
     s = $scope.simulation =
       length: 5
       base: .5
-      supported: 0
+      applied: 0
+
+    $scope.simulation.recalc = ->
+      $scope.simulation.applied = $scope.simulation.internal()
 
     $scope.simulation.crossSection = ->
       ba = parseFloat(s.base)
@@ -66,26 +68,28 @@ angular.module('eau.simulation.compression', [
       buckle = PI_SQUARED * e * moment / (l * l)
       buckle
 
-    $scope.simulation.applied = ->
+    $scope.simulation.internal = ->
       ba = $scope.simulation.crossSection()
       l = parseFloat(s.length)
       volume = l * ba
       columnMass = $scope.currentMaterial.density * volume
-      supportedMass = parseFloat(s.supported)
-      (columnMass + supportedMass) * GRAVITY
+      columnMass * GRAVITY
 
     $scope.simulation.compression = ->
       # allowable stress *cross-sectional area
       $scope.currentMaterial.stress * $scope.simulation.crossSection()
 
     $scope.simulation.deflection = (n)->
-      a = $scope.simulation.applied()
+      a = $scope.simulation.applied
       b = $scope.simulation.buckle()
       ba = parseFloat(s.base)
-      if a > b
-        Math.min ba * (a / b), 2
-      else
-        0
+      if a > b then ba else 0
+
+    $scope.simulation.failure = ->
+      Math.max $scope.simulation.compression(), $scope.simulation.buckle()
+
+    $scope.simulation.failed = ->
+      s.applied > s.buckle() or s.applied > s.compression()
 
     $scope.simulation.showMaterialList = (event) ->
       event.preventDefault
@@ -118,3 +122,5 @@ angular.module('eau.simulation.compression', [
         .then( (momentName) ->
           setCurrentShape momentName
         )
+
+    $scope.simulation.recalc()

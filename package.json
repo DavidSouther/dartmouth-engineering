@@ -11,8 +11,8 @@
     "d3-util": "^3.4.13-u2",
     "flaming-sansa": "0.0.3",
     "q": "^1.1.1",
-    "rupert": "^0.2.5",
-    "rupert-config-angular-material": "0.0.4"
+    "rupert": "^0.3.2",
+    "rupert-plugin-angular-material": "0.1.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
