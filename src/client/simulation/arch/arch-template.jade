@@ -1,12 +1,95 @@
-svg(
-  width="500" height="550"
-  style="overflow:visible"
-  graph-scales="{\
-    x: ['linear', 0, 1],\
-    y: ['linear', 1, 0]\
-  }"
-)
-  brick(
-    ng-repeat="brick in arch"
-    at="$scales(brick.position)"
+md-content
+  md-toolbar.md-whiteframe-z1.toolbar
+    section(layout="row", layout-align="space-around")
+      md-content.md-padding(
+        flex="33"
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Applied&nbsp;Load
+          br
+          span.material-property-value {{ simulation.applied / 3 | number:0}}
+          | kN
+        md-slider(
+          ng-model="simulation.applied",
+          min="{{ simulation.internal() }}",
+          max="{{ 1.1 * simulation.failure() }}"
+        )
+      md-content.md-padding(
+        flex="33"
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Height
+          br
+          span.material-property-value {{ simulation.height | number:0}}
+          | m
+        md-slider(
+          ng-model="simulation.height",
+          min="20",
+          max="600",
+          step="1"
+        )
+      md-content.md-padding(
+        flex="33"
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Span
+          br
+          span.material-property-value {{ simulation.span | number:0}}
+          | m
+        md-slider(
+          ng-model="simulation.span",
+          min="50",
+          max="600",
+          step="1"
+        )
+  div(
+    layout="row",
+    layout-align="space-around"
   )
+    md-content.md-padding(
+      flex="30",
+      layout="column"
+    )
+      div(flex="10", layout="column")
+        b Buckling Load:
+        //- | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
+      div(flex="10", layout="column")
+        b Compressive Load:
+        //- | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
+      div(flex)
+    div(flex, layout="row", layout-align="center center")
+      svg(
+        height="400px"
+        width="400px"
+        graph-scales="{\
+          x: ['linear', -350, 350], \
+          y: ['linear', 550, -50], \
+          ax: ['linear', 0, 600, 0, 400], \
+          ay: ['linear', 0, 600, 0, 400] \
+        }"
+      )
+        g#arch
+          path(
+            stroke="black"
+            stroke-width="1px"
+            fill="lightgrey"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(0) }}\
+              A {{ $scales.ax(simulation.span / 2) }} {{ $scales.ay(simulation.height) }}\
+                0, 0, 1, \
+                {{ $scales.x(simulation.span / 2) }} {{ $scales.y(0) }}\
+              L{{ $scales.x(simulation.span / 2 * .9) }} {{ $scales.y(0) }}\
+              A{{ $scales.ax(simulation.span / 2 * .9) }} {{ $scales.ay(simulation.height * .9) }}\
+                0, 0, 0, \
+                {{ $scales.x(-simulation.span / 2 * .9) }} {{ $scales.y(0) }}\
+              Z\
+            "
+          )
+        g#arrows
+          
