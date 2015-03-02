@@ -2,7 +2,6 @@ angular.module('eau.simulation.truss', [
   'eau.simulation.truss.shapes'
   'simulation.truss.template'
   'eau.utilities.scientific'
-  'eau.simulation.compression.show-select'
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'

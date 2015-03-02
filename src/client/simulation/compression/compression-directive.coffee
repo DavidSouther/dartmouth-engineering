@@ -5,7 +5,6 @@ angular.module('eau.simulation.compression', [
   'eau.simulation.compression.materials'
   'simulation.compression.template'
   'eau.utilities.scientific'
-  'eau.simulation.compression.show-select'
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
@@ -17,7 +16,7 @@ angular.module('eau.simulation.compression', [
 .directive 'compression', ->
   restrict: 'E'
   templateUrl: 'simulation/compression'
-  controller: ($scope, MaterialList, MomentShapes, $mdDialog)->
+  controller: ($scope, MaterialList, MomentShapes)->
     setCurrentMaterial = (materialName) ->
       return unless MaterialList[materialName]?
       $scope.materialName = materialName
