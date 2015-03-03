@@ -33,7 +33,7 @@
     "simulation"
   ],
   "author": "David Souther <davidsouther@gmail.com> (https://davidsouther.com/)",
-  "license": "ISC",
+  "license": "Apache",
   "bugs": {
     "url": "https://github.com/DavidSouther/dartmouth-engineering/issues"
   },
