@@ -59,7 +59,7 @@ angular.module('eau.simulation.compression.materials', [
     moment: (d)->
       (Math.PI / 64) * Math.pow(d, 4)
     crossSection: (d)->
-      Math.PI * d * d * 1/4;
+      Math.PI * d * d * 1/4
   "Hollow Pipe":
     moment: (d)->
       t = d * .25

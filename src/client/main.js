@@ -3,10 +3,8 @@ angular.module('eau', [
   'eau.head-controller',
   'eau.navigation',
   'eau.simulation',
-  'eau.simulation.spring',
-  'eau.simulation.nbody',
   'eau.simulation.compression',
-  'eau.simulation.truss'
+  'eau.simulation.arch'
 ])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
