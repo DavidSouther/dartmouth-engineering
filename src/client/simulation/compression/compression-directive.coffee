@@ -79,6 +79,7 @@ angular.module('eau.simulation.compression', [
       $scope.currentMaterial.stress * $scope.simulation.crossSection()
 
     $scope.simulation.deflection = (n)->
+      return 0 if $scope.simulation.compression() < $scope.simulation.buckle()
       a = $scope.simulation.applied
       b = $scope.simulation.buckle()
       ba = parseFloat(s.base)

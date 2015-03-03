@@ -102,7 +102,7 @@ md-content
         )
           | Column&nbsp;Stress:
           br
-          | {{ simulation.failed() ? 'FAILURE' : 'Nominal' }}
+          | {{ simulation.failed() ? (simulation.buckle() > simulation.compression() ? 'COMPRESSION' : 'BUCKLE') : 'Nominal' }}
       div(flex="10", layout="column")
         b Buckling Load:
         | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
@@ -224,13 +224,14 @@ md-content
             ng-attr-rx="{{ $scales.dx( simulation.base * 3/4 ) }}"
             ng-attr-ry="{{ $scales.dy(simulation.base * 9/16 ) }}"
           )
-      path(
-        ng-if="simulation.applied() > simulation.compression()"
-        stroke="black"
-        stroke-width="1px"
-        fill-opacity="0"
-        ng-attr-d="\
-          M{{ $scales.x(-Math.sqrt(simulation.base)) - 7 }},{{ $scales.y(simulation.length / 4) }}\
-          L{{ $scales.x(Math.sqrt(simulation.base) / 4) }},{{ $scales.y(simulation.length / 4) }}\
-        "
-      )
+        g(
+          ng-if="simulation.failed() && simulation.buckle() > simulation.compression()"
+        )
+          //- transform="translate(50px, 50px)"
+          path(
+            stroke="black"
+            stroke-width="1px"
+            fill="yellow"
+            d="M29,{{ $scales.y( simulation.length * 3/4) }} l53,14 l-9,-26 l26,26 l23,-40 l-0,43 l23,-1 l-14,15 l35,6 l-39,6 l26,27 l-33,-13 l0,34 l-13,-21 l-3,8 l-5,-7 l-9,23 l-2,-20 l-27,25 l14,-39 l-47,7 l47,-23 l-47,-15 l34,-2z"
+          )
+      
