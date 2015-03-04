@@ -9,7 +9,7 @@ md-content
         div.supported-weight-label
           | Applied&nbsp;Load
           br
-          span.material-property-value {{ simulation.applied / 3 | number:0}}
+          span.material-property-value {{ simulation.applied / 1e3 | number:0}}
           | kN
         md-slider(
           ng-model="simulation.applied",
@@ -57,11 +57,11 @@ md-content
       layout="column"
     )
       div(flex="10", layout="column")
-        b Buckling Load:
-        //- | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
+        b Horizontal Load:
+        | {{ simulation.loadX() / 1e3 | number:0 }}&nbsp;kN
       div(flex="10", layout="column")
-        b Compressive Load:
-        //- | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
+        b Vertical Load:
+        | {{ simulation.loadY() / 1e3 | number:0 }}&nbsp;kN
       div(flex)
     div(flex, layout="row", layout-align="center center")
       svg(
@@ -70,8 +70,10 @@ md-content
         graph-scales="{\
           x: ['linear', -350, 350], \
           y: ['linear', 550, -50], \
-          ax: ['linear', 0, 600, 0, 400], \
-          ay: ['linear', 0, 600, 0, 400] \
+          rx: ['linear', 0, 600, 0, 400], \
+          ry: ['linear', 0, 600, 0, 400], \
+          ax: ['linear', 0, simulation.failure(), 10, 25],\
+          ay: ['linear', 0, simulation.failure(), 10, 25]\
         }"
       )
         g#arch
@@ -81,15 +83,34 @@ md-content
             fill="lightgrey"
             ng-attr-d="\
               M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(0) }}\
-              A {{ $scales.ax(simulation.span / 2) }} {{ $scales.ay(simulation.height) }}\
+              A {{ $scales.rx(simulation.span / 2) }} {{ $scales.ry(simulation.height) }}\
                 0, 0, 1, \
                 {{ $scales.x(simulation.span / 2) }} {{ $scales.y(0) }}\
               L{{ $scales.x(simulation.span / 2 * .9) }} {{ $scales.y(0) }}\
-              A{{ $scales.ax(simulation.span / 2 * .9) }} {{ $scales.ay(simulation.height * .9) }}\
+              A{{ $scales.rx(simulation.span / 2 * .9) }} {{ $scales.ry(simulation.height * .9) }}\
                 0, 0, 0, \
                 {{ $scales.x(-simulation.span / 2 * .9) }} {{ $scales.y(0) }}\
               Z\
             "
           )
         g#arrows
-          
+          path(
+            stroke="darkblue"
+            stroke-width="1px"
+            fill="none"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(0) }}\
+              h{{ -$scales.ax(simulation.loadX()) }} \
+              l5,-5\
+            "
+          )
+          path(
+            stroke="darkblue"
+            stroke-width="1px"
+            fill="none"
+            ng-attr-d="\
+              M{{ $scales.x(-simulation.span / 2) + 2 }} {{ $scales.y(0)  }}\
+              v{{ $scales.ax(simulation.loadY()) }} \
+              l5,-5\
+            "
+          )
