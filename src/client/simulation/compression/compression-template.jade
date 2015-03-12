@@ -36,23 +36,23 @@ md-content
             ng-value="shape"
           ) {{ shape }}
     section(layout="row", layout-align="space-around")
+      //- md-content.md-padding(
+      //-   flex="33"
+      //-   layout="column",
+      //-   layout-align="left center",
+      //- )
+      //-   div.supported-weight-label
+      //-     | Applied&nbsp;Load
+      //-     br
+      //-     span.material-property-value {{ simulation.applied / 3 | number:0}}
+      //-     | kN
+      //-   md-slider(
+      //-     ng-model="simulation.applied",
+      //-     min="{{ simulation.internal() }}",
+      //-     max="{{ 1.1 * simulation.failure() }}"
+      //-   )
       md-content.md-padding(
-        flex="33"
-        layout="column",
-        layout-align="left center",
-      )
-        div.supported-weight-label
-          | Applied&nbsp;Load
-          br
-          span.material-property-value {{ simulation.applied / 3 | number:0}}
-          | kN
-        md-slider(
-          ng-model="simulation.applied",
-          min="{{ simulation.internal() }}",
-          max="{{ 1.1 * simulation.failure() }}"
-        )
-      md-content.md-padding(
-        flex="33"
+        flex
         layout="column",
         layout-align="left center",
       )
@@ -68,7 +68,7 @@ md-content
           step=".05"
         )
       md-content.md-padding(
-        flex="33"
+        flex
         layout="column",
         layout-align="left center",
       )
@@ -96,6 +96,7 @@ md-content
         layout="column"
       )
         md-button.md-raised(
+          ng-show="showLoad"
           ng-class="{\
             'md-warn': simulation.failed()\
           }"
@@ -103,10 +104,21 @@ md-content
           | Column&nbsp;Stress:
           br
           | {{ simulation.failed() ? (simulation.buckle() > simulation.compression() ? 'COMPRESSION' : 'BUCKLE') : 'Nominal' }}
-      div(flex="10", layout="column")
+        md-button.md-raised(
+          ng-hide="showLoad"
+          ng-click="calcLoad()"
+        )
+          | Calculate Load
+      div(
+        flex="10", layout="column"
+        ng-show="showLoad"
+      )
         b Buckling Load:
         | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
-      div(flex="10", layout="column")
+      div(
+        flex="10", layout="column"
+        ng-show="showLoad"
+      )
         b Compressive Load:
         | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
       div(flex)

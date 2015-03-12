@@ -1,0 +1,18 @@
+path(
+  style="\
+    stroke: {{ color }};\
+    stroke-width: 1px;\
+    fill: color;\
+    transform: rotate( {{ rotation || 0 }} {{ tip[0] }} {{ tip[1] }} )\
+  }"
+  ng-attr-d="\
+    M{{ tip[0] }} {{ tip[1] }}\
+    l{{ -length / 2 }} {{ - length * 3/12 }}\
+    v{{  length / 6 }}\
+    h{{ -length / 2 }}\
+    v{{  length / 6 }}\
+    h{{  length / 2 }}\
+    v{{  length / 6 }}\
+    z\
+  "
+)

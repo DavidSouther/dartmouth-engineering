@@ -50,7 +50,7 @@ angular.module('eau.simulation.compression', [
     s = $scope.simulation =
       length: 5
       base: .5
-      applied: 0
+      applied: 1
 
     $scope.simulation.recalc = ->
       $scope.simulation.applied = $scope.simulation.internal()
@@ -91,36 +91,12 @@ angular.module('eau.simulation.compression', [
     $scope.simulation.failed = ->
       s.applied > s.buckle() or s.applied > s.compression()
 
-    $scope.simulation.showMaterialList = (event) ->
-      event.preventDefault
-      showObj =
-        templateUrl: 'simulation/compression/show-select'
-        controller: 'ShowSelectCtrl'
-        parent: event.target
-        hasBackdrop: false
-        clickOutsideToClose: false
-        locals:
-          options: Object.keys MaterialList
-
-      $mdDialog.show(showObj)
-        .then( (materialName) ->
-          setCurrentMaterial materialName
-        )
-
-    $scope.simulation.showMomentList = (event) ->
-      event.preventDefault
-      showObj =
-        templateUrl: 'simulation/compression/show-select'
-        controller: 'ShowSelectCtrl'
-        parent: event.target
-        hasBackdrop: false
-        clickOutsideToClose: false
-        locals:
-          options: Object.keys MomentShapes
-
-      $mdDialog.show(showObj)
-        .then( (momentName) ->
-          setCurrentShape momentName
-        )
-
-    $scope.simulation.recalc()
+    $scope.showLoad = no
+    $scope.resetLoad = ->
+      $scope.showLoad = no
+      $scope.simulation.applied = 1
+    $scope.$watch 'simulation.length', -> $scope.resetLoad()
+    $scope.$watch 'simulation.base', -> $scope.resetLoad()
+    $scope.calcLoad = ->
+      $scope.simulation.applied = $scope.simulation.failure()
+      $scope.showLoad = yes
