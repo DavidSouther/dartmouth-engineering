@@ -42,14 +42,16 @@ angular.module('eau.simulation.compression', [
     setCurrentShape 'Square'
 
     $scope.$watch 'materialName', (newMaterial)->
+      $scope.resetLoad()
       setCurrentMaterial(newMaterial)
 
     $scope.$watch 'shapeName', (newShape)->
+      $scope.resetLoad()
       setCurrentShape newShape
 
     s = $scope.simulation =
-      length: 5
-      base: .5
+      length: 2
+      base: .25
       applied: 1
 
     $scope.simulation.recalc = ->
