@@ -101,7 +101,7 @@ md-content
             'md-warn': simulation.failed()\
           }"
         )
-          | Column&nbsp;Stress:
+          | Failure&nbsp;Mode:
           br
           | {{ simulation.failed() ? (simulation.buckle() > simulation.compression() ? 'COMPRESSION' : 'BUCKLE') : 'Nominal' }}
         md-button.md-raised(
@@ -111,13 +111,13 @@ md-content
           | Calculate Load
       div(
         flex="10", layout="column"
-        ng-show="showLoad"
+        ng-show="showLoad && simulation.compression() > simulation.buckle()"
       )
         b Buckling Load:
         | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
       div(
         flex="10", layout="column"
-        ng-show="showLoad"
+        ng-show="showLoad && simulation.buckle() > simulation.compression()"
       )
         b Compressive Load:
         | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
