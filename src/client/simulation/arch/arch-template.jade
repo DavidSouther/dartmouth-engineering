@@ -89,7 +89,8 @@ md-content
           rx: ['linear', 0, 600, 0, 400], \
           ry: ['linear', 0, 600, 0, 400], \
           ax: ['linear', 0, force.horizontal.max, 5, 45],\
-          ay: ['linear', 0, force.vertical.max, 5, 45]\
+          ay: ['linear', 0, force.vertical.max, 5, 45],\
+          applied: ['linear', 10, 50000, 3, 12]\
         }"
       )
         g#arch
@@ -109,42 +110,46 @@ md-content
               Z\
             "
           )
-          path(
-            stroke="green"
-            stroke-width="1px"
-            ng-attr-d="\
-              M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(simulation.height/3) }}\
-              L{{ $scales.x( simulation.span / 2) }} {{ $scales.y(simulation.height/3) }}\
-            "
-          )
         g#arrows
-          path(
-            stroke="darkblue"
-            stroke-width="1px"
-            fill="none"
-            ng-attr-d="\
-              M{{ $scales.x(-simulation.span / 2) - $scales.ax(force.horizontal()) }} {{ $scales.y(0) }}\
-              h{{ $scales.ax(force.horizontal()) }} \
-              l-5,-5\
-            "
+          g#applied_arrows
+            arrow(
+              ng-repeat="a in appliedArrows()"
+              color="'green'"
+              rotation="90"
+              tip="[$scales.x(-simulation.span / 2 + $index * simulation.span / 2 / 10), $scales.y(simulation.height/3)]"
+              length="$scales.applied(simulation.applied)"
+            )
+            path(
+              stroke="green"
+              stroke-width="1px"
+              ng-attr-d="\
+                M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(simulation.height/3) }}\
+                L{{ $scales.x( simulation.span / 2) }} {{ $scales.y(simulation.height/3) }}\
+              "
+            )
+            path(
+              stroke="green"
+              stroke-width="1px"
+              ng-attr-d="\
+                M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(simulation.height/3) - $scales.applied(simulation.applied) }}\
+                L{{ $scales.x( simulation.span / 2) }} {{ $scales.y(simulation.height/3) - $scales.applied(simulation.applied) }}\
+              "
+            )
+          arrow(
+            tip="[$scales.x(-simulation.span / 2), $scales.y(0)]"
+            length="$scales.ax(force.compressive())"
+            color="'red'"
+            rotation="0"
           )
-          path(
-            stroke="red"
-            stroke-width="1px"
-            fill="none"
-            ng-attr-d="\
-              M{{ $scales.x(-simulation.span / 2) }} {{ $scales.y(0) + $scales.ay(force.vertical())  }}\
-              v{{ -$scales.ay(force.vertical()) }} \
-              l5,5\
-            "
+          arrow(
+            color="'darkblue'"
+            rotation="-90"
+            tip="[$scales.x(-simulation.span / 2), $scales.y(0)]"
+            length="$scales.ay(force.vertical())"
           )
-          path(
-            stroke="red"
-            stroke-width="1px"
-            fill="none"
-            ng-attr-d="\
-              M{{ $scales.x(0) }} {{ $scales.y(simulation.height/3) - $scales.ax(force.compressive())  }}\
-              v{{ $scales.ax(force.compressive()) }} \
-              l5,-5\
-            "
+          arrow(
+            color="'red'"
+            rotation="90"
+            tip="[$scales.x(0), $scales.y(simulation.height/3)]"
+            length="$scales.ax(force.compressive())"
           )

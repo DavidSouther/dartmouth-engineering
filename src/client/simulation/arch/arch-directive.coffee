@@ -1,5 +1,6 @@
 angular.module('eau.simulation.arch', [
   'eau.navigation'
+  'eau.arrow'
   'simulation.arch.template'
 ])
 .config ['SimulationNavProvider', (sims)->
@@ -14,6 +15,9 @@ angular.module('eau.simulation.arch', [
       applied: 1e2 # The applied load, w,  should be in ‘kN/m’
       height: 200
       span: 200
+
+    $scope.appliedArrows = ->
+      [0...Math.floor($scope.simulation.span / 2 / 30)]
 
     $scope.force =
       vertical: ->
