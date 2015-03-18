@@ -1,18 +1,21 @@
 path(
+  ng-attr-transform="\
+    rotate({{arrow.rotation}} {{ arrow.tip[0] }} {{ arrow.tip[1] }}) \
+    translate({{ arrow.tip[0] }} {{ arrow.tip[1] }})\
+  "
   style="\
-    stroke: {{ color }};\
+    stroke: {{ arrow.color }};\
     stroke-width: 1px;\
-    fill: color;\
-    transform: rotate( {{ rotation || 0 }} {{ tip[0] }} {{ tip[1] }} )\
+    fill: {{ arrow.color }};\
   }"
   ng-attr-d="\
-    M{{ tip[0] }} {{ tip[1] }}\
-    l{{ -length / 2 }} {{ - length * 3/12 }}\
-    v{{  length / 6 }}\
-    h{{ -length / 2 }}\
-    v{{  length / 6 }}\
-    h{{  length / 2 }}\
-    v{{  length / 6 }}\
+    M0 0\
+    l{{ -arrow.length / 2 }} {{ - arrow.length * 3/12 }}\
+    v{{  arrow.length / 6 }}\
+    h{{ -arrow.length / 2 }}\
+    v{{  arrow.length / 6 }}\
+    h{{  arrow.length / 2 }}\
+    v{{  arrow.length / 6 }}\
     z\
   "
 )
