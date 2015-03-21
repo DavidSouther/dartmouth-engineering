@@ -4,7 +4,8 @@ angular.module('eau', [
   'eau.navigation',
   'eau.simulation',
   'eau.simulation.compression',
-  'eau.simulation.arch'
+  'eau.simulation.arch',
+  'eau.simulation.tension'
 ])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')

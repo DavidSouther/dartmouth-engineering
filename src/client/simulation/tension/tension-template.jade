@@ -1,0 +1,133 @@
+md-content
+  md-toolbar.md-whiteframe-z1.toolbar
+    section(
+      layout="row"
+    )
+      section(
+        flex
+        layout="column"
+        layout-align="space-around"
+      )
+        md-content.md-padding(
+          flex
+        )
+          md-select(
+            ng-model="simulation.material"
+            placeholder="Material"
+            multiple=false
+          )
+            md-option(
+              ng-repeat="material in materials"
+              ng-value="material"
+            ) {{ material.name }}
+        md-content.md-padding(
+          flex
+        )
+          div.supported-weight-label
+            | Cable Thickness:
+            br
+            span.material-property-value {{ simulation.diameter | number:2}}
+            | mm
+          md-slider(
+            aria-label="Thickness of the cable, in millimeters."
+            ng-model="simulation.diameter",
+            min="1",
+            max="50",
+            step=".1"
+          )
+      section(
+        flex
+        layout="column",
+        layout-align="space-around"
+      )
+        md-content.md-padding(
+          flex
+        )
+          div.supported-weight-label
+            | Anchor&nbsp;Width:
+            br
+            span.material-property-value {{ simulation.width | number:2}}
+            | m
+          md-slider(
+            aria-label="Set anchor width, in meters."
+            ng-model="simulation.width",
+            min="0.05",
+            max="20",
+            step=".05"
+          )
+        md-content.md-padding(
+          flex
+        )
+          div.supported-weight-label
+            | Pull&nbsp;Depth:
+            br
+            span.material-property-value {{ simulation.pull | number:2}}
+            | m
+          md-slider(
+            aria-label="How far the anchor is pulled, in meters."
+            ng-model="simulation.pull",
+            min="0.05",
+            max="10",
+            step=".05"
+          )
+  div(
+    layout="row",
+    layout-align="space-around"
+  )
+    md-content.md-padding(
+      flex="30",
+      layout="column"
+    )
+      div(
+        flex="10",
+        layout="column"
+      )
+        div.md-padding
+          b Maximum&nbsp;load:
+          br
+          | {{ simulation.load() / 1e6 |number:2 }}
+          | &nbsp;mN
+      div(flex)
+    div(flex, layout="row", layout-align="center center")
+      svg(
+        height="400px"
+        width="400px"
+        graph-scales="{\
+          x: ['linear', -15, 15], \
+          y: ['linear', -5, 15], \
+          r: ['linear', 1, 50, 0.5, 6],\
+          force: ['linear', 0, 4e12, 8, 50], \
+        }"
+      )
+        path(
+          ng-style="{\
+            'stroke': 'blue',\
+            'stroke-width': $scales.r(simulation.diameter),\
+            'fill': 'none'\
+          }"
+          ng-attr-d="\
+            M {{$scales.x(-simulation.width/2)}} {{$scales.y(0)}}\
+            L {{$scales.x(0)}} {{$scales.y(simulation.pull)}}\
+            L {{$scales.x(simulation.width/2)}} {{$scales.y(0)}}\
+          "
+        )
+        arrow(
+          color="'purple'"
+          rotation="90"
+          tip="[$scales.x(0), $scales.y(simulation.pull) + $scales.force(simulation.load())]"
+          length="$scales.force(simulation.load())"
+        )
+
+        arrow(
+          color="'red'"
+          rotation="-thetaDeg()"
+          tip="[$scales.x(simulation.width / 2), $scales.y(0)]"
+          length="$scales.force(simulation.stress())"
+        )
+
+        arrow(
+          color="'red'"
+          rotation="180 + thetaDeg()"
+          tip="[$scales.x(-simulation.width / 2), $scales.y(0)]"
+          length="$scales.force(simulation.stress())"
+        )
