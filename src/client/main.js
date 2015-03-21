@@ -9,7 +9,7 @@ angular.module('eau', [
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
     .primaryPalette('grey')
-    // .accentPalette('blue-grey')
+    .accentPalette('blue')
     // .warnPallette('amber')
     ;
 })

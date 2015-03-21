@@ -12,12 +12,12 @@ angular.module('eau.simulation.arch', [
   templateUrl: 'simulation/arch'
   controller: ($scope)->
     $scope.simulation =
-      applied: 1e2 # The applied load, w,  should be in ‘kN/m’
+      applied: 25 # The applied load, w,  should be in ‘kN/m’
       height: 200
       span: 200
 
-    $scope.appliedArrows = ->
-      [0...Math.floor($scope.simulation.span / 2 / 30)]
+    $scope.forall = (n)->
+      [0...n]
 
     $scope.force =
       vertical: ->
@@ -42,8 +42,8 @@ angular.module('eau.simulation.arch', [
         # wL^2/(8d) ) . See below for a schematic.
         $scope.force.horizontal()
 
-    $scope.force.vertical.max = 15000000
-    $scope.force.horizontal.max = 58522500
+    $scope.force.vertical.max = 75000
+    $scope.force.horizontal.max = 1125000
 
 # I think a simple start is good. My goal is to have students experiment with
 # height and span to understand how they affect the compressive force in the

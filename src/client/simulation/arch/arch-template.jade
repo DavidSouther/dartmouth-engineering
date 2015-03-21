@@ -11,17 +11,18 @@ md-content
           br
           span.material-property-value {{ simulation.applied | number:0}}
           | &nbsp;kN/m
-        md-slider(
+        md-slider.md-primary(
           aria-label="Applied Load in kilonewtons per meter."
           ng-model="simulation.applied",
-          min="10",
-          max="50000"
+          step="0.5",
+          min="0",
+          max="250"
         )
-        div.supported-weight-label
-          md-button(ng-click="simulation.applied = 10") Empty
-          md-button(ng-click="simulation.applied = 5000") Cars
-          md-button(ng-click="simulation.applied = 30000") Semis
-          md-button(ng-click="simulation.applied = 45000") Train
+        //- div.supported-weight-label
+        //-   md-button(ng-click="simulation.applied = 10") Empty
+        //-   md-button(ng-click="simulation.applied = 5000") Cars
+        //-   md-button(ng-click="simulation.applied = 30000") Semis
+        //-   md-button(ng-click="simulation.applied = 45000") Train
       md-content.md-padding(
         flex="33"
         layout="column",
@@ -32,17 +33,17 @@ md-content
           br
           span.material-property-value {{ simulation.height | number:0}}
           | m
-        md-slider(
+        md-slider.md-primary(
           aria-label="Arch height, in meters."
           ng-model="simulation.height",
           min="10",
-          max="600",
+          max="200",
           step="1"
         )
-        div.supported-weight-label
-          md-button(ng-click="simulation.height = 50") Small
-          md-button(ng-click="simulation.height = 250") Large
-          md-button(ng-click="simulation.height = 600") Mega
+        //- div.supported-weight-label
+        //-   md-button(ng-click="simulation.height = 50") Small
+        //-   md-button(ng-click="simulation.height = 250") Large
+        //-   md-button(ng-click="simulation.height = 600") Mega
       md-content.md-padding(
         flex="33"
         layout="column",
@@ -53,17 +54,17 @@ md-content
           br
           span.material-property-value {{ simulation.span | number:0}}
           | m
-        md-slider(
+        md-slider.md-primary(
           aria-label="Arch span, in meters."
           ng-model="simulation.span",
           min="30",
-          max="600",
+          max="400",
           step="1"
         )
-        div.supported-weight-label
-          md-button(ng-click="simulation.span = 50") Small
-          md-button(ng-click="simulation.span = 250") Large
-          md-button(ng-click="simulation.span = 600") Mega
+        //- div.supported-weight-label
+        //-   md-button(ng-click="simulation.span = 50") Small
+        //-   md-button(ng-click="simulation.span = 250") Large
+        //-   md-button(ng-click="simulation.span = 600") Mega
   div(
     layout="row",
     layout-align="space-around"
@@ -72,25 +73,29 @@ md-content
       flex="30",
       layout="column"
     )
-      div(flex="10", layout="column")
-        b Horizontal Load:
-        | {{ force.horizontal() | number:0 }}&nbsp;kN
-      div(flex="10", layout="column")
-        b Vertical Load:
-        | {{ force.vertical() | number:0 }}&nbsp;kN
+      div(flex="25", layout="column")
+        md-button.md-raised.md-warn
+          b Compressive:
+          | &nbsp;{{ force.horizontal() | number:0 }}&nbsp;kN
+        | This is the horizontal reaction force at the base or support point of the arch. The horizontal force is equal to the internal compressive force, C, for an arch with a funicular form.
+      div(flex, layout="column")
+        md-button.md-raised.md-accent
+          b Vertical:
+          | &nbsp;{{ force.vertical() | number:0 }}&nbsp;kN
+        | This is the vertical reaction force at the base or support point of the arch. The vertical force must balance out the applied load.
       div(flex)
     div(flex, layout="row", layout-align="center center")
       svg(
         height="400px"
         width="400px"
         graph-scales="{\
-          x: ['linear', -350, 350], \
-          y: ['linear', 550, -50], \
-          rx: ['linear', 0, 600, 0, 400], \
-          ry: ['linear', 0, 600, 0, 400], \
-          ax: ['linear', 0, force.horizontal.max, 5, 45],\
+          x: ['linear', -250, 250], \
+          y: ['linear', 450, -50], \
+          rx: ['linear', 0, 500, 0, 400], \
+          ry: ['linear', 0, 750, 0, 400], \
+          ax: ['linear', 0, force.horizontal.max, 10, 45],\
           ay: ['linear', 0, force.vertical.max, 5, 45],\
-          applied: ['linear', 10, 50000, 3, 12]\
+          applied: ['linear', 0, 450, 1, 17]\
         }"
       )
         g#arch
@@ -113,10 +118,10 @@ md-content
         g#arrows
           g#applied_arrows
             arrow(
-              ng-repeat="a in appliedArrows()"
+              ng-repeat="a in forall($scales.applied(simulation.span))"
               color="'green'"
               rotation="90"
-              tip="[$scales.x(-simulation.span / 2 + $index * simulation.span / 2 / 10), $scales.y(simulation.height/3)]"
+              tip="[$scales.x((-simulation.span / 2) + ($index * simulation.span / Math.floor($scales.applied(simulation.span)))), $scales.y(simulation.height/3)]"
               length="$scales.applied(simulation.applied)"
             )
             path(
@@ -136,20 +141,20 @@ md-content
               "
             )
           arrow(
+            color="'rgb(244,67,54)'"
+            rotation="0"
             tip="[$scales.x(-simulation.span / 2), $scales.y(0)]"
             length="$scales.ax(force.compressive())"
-            color="'red'"
-            rotation="0"
           )
           arrow(
-            color="'darkblue'"
+            color="'rgb(68,138,255)'"
             rotation="-90"
             tip="[$scales.x(-simulation.span / 2), $scales.y(0)]"
             length="$scales.ay(force.vertical())"
           )
           arrow(
-            color="'red'"
-            rotation="90"
-            tip="[$scales.x(0), $scales.y(simulation.height/3)]"
+            color="'rgb(244,67,54)'"
+            rotation="180"
+            tip="[$scales.x(0), $scales.y(simulation.height/3 * 0.9)]"
             length="$scales.ax(force.compressive())"
           )
