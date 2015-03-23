@@ -3,10 +3,10 @@ ArrowController.$inject = ['$scope'];
 function ArrowController($scope){
   $scope.sin = function(thetaDeg){
     return Math.sin(thetaDeg * toRad);
-  }
+  };
   $scope.cos = function(thetaDeg){
     return Math.cos(thetaDeg * toRad);
-  }
+  };
 }
 
 angular.module('eau.arrow', [
@@ -26,5 +26,5 @@ angular.module('eau.arrow', [
       color: '=',
       rotation: '='
     }
-  }
+  };
 });

@@ -8,6 +8,7 @@ angular.module('eau.simulation.compression', [
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
+  'eau.navigation'
 ])
 .config ['SimulationNavProvider', (sims)->
   sims.sim 'compression',
@@ -17,7 +18,7 @@ angular.module('eau.simulation.compression', [
   restrict: 'E'
   templateUrl: 'simulation/compression'
   controller: ($scope, MaterialList, MomentShapes)->
-    setCurrentMaterial = (materialName) ->
+    $scope.setCurrentMaterial = setCurrentMaterial = (materialName) ->
       return unless MaterialList[materialName]?
       $scope.materialName = materialName
       $scope.currentMaterial =
@@ -27,7 +28,7 @@ angular.module('eau.simulation.compression', [
         color: MaterialList[materialName].color
         stress: MaterialList[materialName].stress
 
-    setCurrentShape = (shape)->
+    $scope.setCurrentShape = setCurrentShape = (shape)->
       return unless MomentShapes[shape]?
       $scope.shapeName = shape
       $scope.currentShape =
@@ -52,20 +53,19 @@ angular.module('eau.simulation.compression', [
     s = $scope.simulation =
       length: 2
       base: .25
-      applied: 1
-
-    $scope.simulation.recalc = ->
-      $scope.simulation.applied = $scope.simulation.internal()
 
     $scope.simulation.crossSection = ->
       ba = parseFloat(s.base)
       $scope.currentShape.crossSection(ba)
 
+    $scope.simulation.moment = ->
+      $scope.currentShape.moment($scope.simulation.base)
+
     $scope.simulation.buckle = ->
       ba = $scope.simulation.crossSection()
       l = parseFloat(s.length)
       e = $scope.currentMaterial.elasticity
-      moment = $scope.currentShape.moment(ba)
+      moment = $scope.simulation.moment()
       buckle = PI_SQUARED * e * moment / (l * l)
       buckle
 
@@ -88,7 +88,7 @@ angular.module('eau.simulation.compression', [
       if a > b then ba else 0
 
     $scope.simulation.failure = ->
-      Math.max $scope.simulation.compression(), $scope.simulation.buckle()
+      Math.min $scope.simulation.compression(), $scope.simulation.buckle()
 
     $scope.simulation.failed = ->
       s.applied > s.buckle() or s.applied > s.compression()

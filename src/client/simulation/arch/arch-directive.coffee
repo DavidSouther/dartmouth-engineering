@@ -24,22 +24,23 @@ angular.module('eau.simulation.arch', [
         # vertical reaction will act upward and equal w*L/2 (where L= the span).
         w = $scope.simulation.applied
         L = $scope.simulation.span
-        w * (L / 2)
+        v = w * (L / 2)
+        Math.round v
 
       horizontal: ->
-        # horizontal reaction will = w*L^2/(8*d) to the right where d = the depth or
-        # height of the arch.
+        # horizontal reaction will = w*L^2/(8*d) to the right where
+        # d = the depth or height of the arch.
         d = $scope.simulation.height
         d8 = d * 8
         L = $scope.simulation.span
         w = $scope.simulation.applied
-        w * L * L / d8
+        h = w * L * L / d8
+        Math.round h
 
       compressive: ->
-        # If possible, it would be great to add a compressive force at the midpoint of
-        # the arch (to be consistent this would be a red arrow – again, Katherine drew
-        # some). This compressive force, C, is equal to the horizontal reaction (
-        # wL^2/(8d) ) . See below for a schematic.
+        # If possible, it would be great to add a compressive force at the
+        # midpoint of the arch. This compressive force, C, is equal to the
+        # horizontal reaction w(L^2)/(8d).
         $scope.force.horizontal()
 
     $scope.force.vertical.max = 75000
