@@ -67,18 +67,13 @@ angular.module('eau.simulation.compression', [
       e = $scope.currentMaterial.elasticity
       moment = $scope.simulation.moment()
       buckle = PI_SQUARED * e * moment / (l * l)
-      buckle
-
-    $scope.simulation.internal = ->
-      ba = $scope.simulation.crossSection()
-      l = parseFloat(s.length)
-      volume = l * ba
-      columnMass = $scope.currentMaterial.density * volume
-      columnMass * GRAVITY
+      Math.round buckle
 
     $scope.simulation.compression = ->
       # allowable stress *cross-sectional area
-      $scope.currentMaterial.stress * $scope.simulation.crossSection()
+      stress = $scope.currentMaterial.stress
+      area = $scope.simulation.crossSection()
+      Math.round  stress * area
 
     $scope.simulation.deflection = (n)->
       return 0 if $scope.simulation.compression() < $scope.simulation.buckle()

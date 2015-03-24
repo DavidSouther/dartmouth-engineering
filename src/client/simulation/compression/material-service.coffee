@@ -4,38 +4,38 @@ angular.module('eau.simulation.compression.materials', [
 .value 'MaterialList',
   "Concrete":
     density: 23e3
-    elasticity: 20e9
-    stress: 70e6
+    elasticity: 20e6
+    stress: 70e3
     color: 'bisque'
   "Granite":
     density: 27e3
-    elasticity: 80e9
-    stress: 150e6
+    elasticity: 80e6
+    stress: 150e3
     color: 'slategrey'
   "Plastic":
     density: 27e3
-    elasticity: 2e9
-    stress: 50e6
+    elasticity: 2e6
+    stress: 50e3
     color: 'honeydew'
   "Glass":
     density: 10e3
-    elasticity: 50e9
-    stress: 100e6
+    elasticity: 50e6
+    stress: 100e3
     color: "paleturquoise"
   "Steel":
     density: 77e3
-    elasticity: 200e9
-    stress: 250e6
+    elasticity: 200e6
+    stress: 250e3
     color: 'lightsteelblue'
   "Wood":
     density: 6e3
-    elasticity: 10e9
-    stress: 30e6
+    elasticity: 10e6
+    stress: 30e3
     color: 'brown'
   "Copper":
     density: 87e3
-    elasticity: 100e9
-    stress: 150e6
+    elasticity: 100e6
+    stress: 150e3
     color: "sienna"
 
 .value 'MomentShapes',
@@ -57,8 +57,8 @@ angular.module('eau.simulation.compression.materials', [
       (tube - center)
   "Pipe":
     moment: (d)->
-      Math.pow(d, 4) / 65
-      # (Math.PI / 64) * Math.pow(d, 4)
+      # Math.pow(d, 4) / 64
+      (Math.PI / 64) * Math.pow(d, 4)
     crossSection: (d)->
       Math.PI * d * d * 1/4
   "Hollow Pipe":
