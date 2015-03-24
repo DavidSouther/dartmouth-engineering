@@ -5,6 +5,7 @@ angular.module('eau.simulation.tension', [
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
+  'eau.navigation'
 ])
 .config ['SimulationNavProvider', (sims)->
   sims.sim 'tension',
@@ -13,7 +14,7 @@ angular.module('eau.simulation.tension', [
 .directive 'tension', ->
   restrict: 'E'
   templateUrl: 'simulation/tension'
-  controller: ($scope, MaterialList, MomentShapes)->
+  controller: ($scope)->
     $scope.materials = [{
       name: 'Steel'
       maxStress: 250e6
@@ -28,6 +29,11 @@ angular.module('eau.simulation.tension', [
       diameter: 10 # mm
       material: $scope.materials[0]
 
+    $scope.area = ->
+      d = $scope.simulation.diameter
+      d2 = d / 2
+      Math.PI * d2 * d2
+
     $scope.theta = ->
       s = $scope.simulation
       Math.atan(s.pull / (s.width / 2))
@@ -37,10 +43,8 @@ angular.module('eau.simulation.tension', [
 
     $scope.simulation.stress = ->
       # Force in the cable, F = (allow_stress)*(cross‐sectional Area)
-      d = $scope.simulation.diameter
+      a = $scope.area() / 1000 # mm to m
       m = $scope.simulation.material
-
-      a = Math.PI * d * d
       m.maxStress * a
 
     $scope.simulation.load = ->
