@@ -76,7 +76,7 @@ md-content
         div.supported-weight-label
           | Length&nbsp;
           br
-          span.material-property-value {{ simulation.length | number:0}}
+          span.material-property-value {{ simulation.length | number:2}}
           | m
         md-slider(
           aria-label="Set column height."
@@ -116,13 +116,13 @@ md-content
         ng-show="showLoad && simulation.compression() > simulation.buckle()"
       )
         b Buckling Load:
-        | {{ simulation.buckle() / 3 | number:0 }}&nbsp;kN
+        | {{ simulation.buckle() | number:0 }}&nbsp;kN
       div(
         flex="10", layout="column"
         ng-show="showLoad && simulation.buckle() > simulation.compression()"
       )
         b Compressive Load:
-        | {{ simulation.compression() / 3 | number:0 }}&nbsp;kN
+        | {{ simulation.compression() | number:0 }}&nbsp;kN
       div(flex)
     div(flex, layout="row", layout-align="center center")
       svg(

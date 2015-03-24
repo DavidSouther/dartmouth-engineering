@@ -54,11 +54,14 @@ describe 'Compression Simulation', ->
           sut.setCurrentShape test[0]
 
           sim = sut.simulation
-          debugger
           sim.crossSection().should.be.closeTo test[4], 1e-5, "Area"
           sim.moment().should.be.closeTo test[5], 3e-5, "Moment"
           sim.compression().should.be.closeTo test[6], 1e0, "Compression"
           sim.buckle().should.be.closeTo test[7], 1e0, "Buckle"
+
+          sut.calcLoad()
+          sim.failed().should.equal yes, 'Failed'
+          sim.applied.should.be.closeTo Math.min(test[7], test[6]), 1e0, 'Fail'
 
   describe 'Directive', ->
 

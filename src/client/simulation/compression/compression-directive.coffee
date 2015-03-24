@@ -51,6 +51,7 @@ angular.module('eau.simulation.compression', [
       setCurrentShape newShape
 
     s = $scope.simulation =
+      applied: 0
       length: 2
       base: .25
 
@@ -77,16 +78,16 @@ angular.module('eau.simulation.compression', [
 
     $scope.simulation.deflection = (n)->
       return 0 if $scope.simulation.compression() < $scope.simulation.buckle()
-      a = $scope.simulation.applied
-      b = $scope.simulation.buckle()
-      ba = parseFloat(s.base)
-      if a > b then ba else 0
+      if s.failed()
+        parseFloat(s.base)
+      else
+        0
 
     $scope.simulation.failure = ->
       Math.min $scope.simulation.compression(), $scope.simulation.buckle()
 
     $scope.simulation.failed = ->
-      s.applied > s.buckle() or s.applied > s.compression()
+      s.applied >= s.buckle() or s.applied >= s.compression()
 
     $scope.showLoad = no
     $scope.resetLoad = ->
