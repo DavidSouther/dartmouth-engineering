@@ -56,7 +56,7 @@ describe 'Tension Simulation', ->
           sut.simulation.pull = test[5]
           sut.simulation.diameter = test[2]
 
-        it "runs correctly for #{test[0]}, diameter #{test[2]}", ->
+        it "is correct for #{test[2]}mm #{test[0]}", ->
           setup()
           sut.theta().should.be.closeTo test[6], 1e-2, "Theta #{i}"
           sut.area().should.be.closeTo test[3], 1e-2, "Area #{i}"

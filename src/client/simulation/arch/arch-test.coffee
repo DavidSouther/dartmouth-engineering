@@ -4,34 +4,6 @@ START_HEIGHT = 200
 START_SPAN = 200
 
 sut = null
-describe 'Arch Simulation', ->
-  beforeEach module 'eau.simulation.arch'
-
-  describe 'Controller', ->
-    beforeEach inject ($controller)->
-      el = renderElement('arch')
-      sut = el.$scope
-
-    it 'sets default simulation properties', ->
-      sut.simulation.applied.should.equal START_APPLIED
-      sut.simulation.height.should.equal START_HEIGHT
-      sut.simulation.span.should.equal START_SPAN
-
-    it 'calculates correct values', ->
-      archDataTable.forEach (test)->
-        # [ Applied, Height, Span | Compress, Horizontal, Vertical ]
-        sut.simulation.applied = test[0]
-        sut.simulation.height = test[1]
-        sut.simulation.span = test[2]
-
-        sut.force.compressive().should.equal test[3]
-        sut.force.horizontal().should.equal test[4]
-        sut.force.vertical().should.equal test[5]
-
-  describe 'Directive', ->
-
-  describe 'Simulation', ->
-
 
 archDataTable = [
   # [ Applied, Height, Span | Compress, Horizontal, Vertical ]
@@ -56,3 +28,35 @@ archDataTable = [
   [250, 120, 300, 23438, 23438, 37500],
   [250, 240, 400, 20833, 20833, 50000]
 ]
+
+describe 'Arch Simulation', ->
+  beforeEach module 'eau.simulation.arch'
+
+  describe 'Controller', ->
+    it 'sets default simulation properties', ->
+      el = renderElement('arch')
+      sut = el.$scope
+      sut.simulation.applied.should.equal START_APPLIED
+      sut.simulation.height.should.equal START_HEIGHT
+      sut.simulation.span.should.equal START_SPAN
+
+    describe 'Calculation (height x span @ applied)', ->
+      archDataTable.forEach (test)->
+        setup = ->
+          el = renderElement('arch')
+          sut = el.$scope
+
+        it "is correct for #{test[1]}m x #{test[2]}m @ #{test[0]}N", ->
+          setup()
+          # [ Applied, Height, Span | Compress, Horizontal, Vertical ]
+          sut.simulation.applied = test[0]
+          sut.simulation.height = test[1]
+          sut.simulation.span = test[2]
+
+          sut.force.compressive().should.be.closeTo test[3], 1e0
+          sut.force.horizontal().should.be.closeTo test[4], 1e-7
+          sut.force.vertical().should.be.closeTo test[5], 1e-7
+
+  describe 'Directive', ->
+
+  describe 'Simulation', ->
