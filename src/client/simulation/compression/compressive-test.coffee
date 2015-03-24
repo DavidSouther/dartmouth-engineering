@@ -3,38 +3,6 @@ START_LENGTH = 2
 START_BASE = .25
 
 sut = null
-describe 'Compression Simulation', ->
-  beforeEach module 'eau.simulation.compression'
-
-  describe 'Controller', ->
-    beforeEach inject ($controller)->
-      el = renderElement('compression')
-      sut = el.$scope
-
-    it 'sets default simulation properties', ->
-      sut.simulation.length.should.equal START_LENGTH
-      sut.simulation.base.should.equal START_BASE
-
-    it 'calculates correct values', ->
-      compressionDataTable.forEach (test, i)->
-        console.log(i, test)
-        # [ Shape, Material, Diameter, Length | Area, Moment, Compress, Buckle ]
-        sut.simulation.length = test[3]
-        sut.simulation.base = test[2]
-        sut.setCurrentMaterial test[1]
-        sut.setCurrentShape test[0]
-
-        sim = sut.simulation
-
-        sim.crossSection().should.be.closeTo test[4], 1e-7, "Area #{i}"
-        sim.moment().should.be.closeTo test[5], 1e-7, "Moment #{i}"
-        # sim.compression().should.be.closeTo test[6], 1e-7, "Compression #{i}"
-        # sim.buckle().should.be.closeTo test[7], 1e-7, "Buckle #{i}"
-
-  describe 'Directive', ->
-
-  describe 'Simulation', ->
-
 
 compressionDataTable = [
   ['Square', 'Concrete', 0.25, 2, 0.0625, 0.000325520833333333, 4375, 16064],
@@ -62,3 +30,36 @@ compressionDataTable = [
   ['Pipe', 'Wood', 0.5, 4, 0.196349540849362, 0.0009765625, 5890, 6024],
   ['Pipe', 'Wood', 0.5, 8, 0.196349540849362, 0.0009765625, 5890, 1506],
 ]
+
+describe 'Compression Simulation', ->
+  beforeEach module 'eau.simulation.compression'
+
+  describe 'Controller', ->
+    it 'sets default simulation properties', ->
+      el = renderElement('compression')
+      sut = el.$scope
+      sut.simulation.length.should.equal START_LENGTH
+      sut.simulation.base.should.equal START_BASE
+
+    describe 'Calculation (material as shape (base x height))', ->
+      compressionDataTable.forEach (test, i)->
+        # [ Shape, Material, Diameter, Length | Area, Moment, Compress, Buckle ]
+        it "is correct for #{test[1]} as #{test[0]} (#{test[2]}x#{test[3]})", ->
+          el = renderElement('compression')
+          sut = el.$scope
+
+          sut.simulation.length = test[3]
+          sut.simulation.base = test[2]
+          sut.setCurrentMaterial test[1]
+          sut.setCurrentShape test[0]
+
+          sim = sut.simulation
+
+          sim.crossSection().should.be.closeTo test[4], 1e-7, "Area"
+          sim.moment().should.be.closeTo test[5], 3e-5, "Moment"
+          sim.compression().should.be.closeTo test[6], 1e-7, "Compression"
+          sim.buckle().should.be.closeTo test[7], 1e-7, "Buckle"
+
+  describe 'Directive', ->
+
+  describe 'Simulation', ->
