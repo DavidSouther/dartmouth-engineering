@@ -1,21 +1,46 @@
-path(
-  ng-attr-transform="\
-    rotate({{arrow.rotation}} {{ arrow.tip[0] }} {{ arrow.tip[1] }}) \
-    translate({{ arrow.tip[0] }} {{ arrow.tip[1] }})\
-  "
-  style="\
-    stroke: {{ arrow.color }};\
-    stroke-width: 1px;\
-    fill: {{ arrow.color }};\
-  }"
-  ng-attr-d="\
-    M0 0\
-    l{{ -arrow.length / 2 }} {{ - arrow.length * 3/12 }}\
-    v{{  arrow.length / 6 }}\
-    h{{ -arrow.length / 2 }}\
-    v{{  arrow.length / 6 }}\
-    h{{  arrow.length / 2 }}\
-    v{{  arrow.length / 6 }}\
-    z\
-  "
-)
+g(ng-switch="arrow.point")
+  path(
+    ng-switch-default
+    ng-attr-transform="\
+      rotate({{arrow.rotation}} {{ arrow.tip[0] }} {{ arrow.tip[1] }}) \
+      translate({{ arrow.tip[0] }} {{ arrow.tip[1] }})\
+    "
+    style="\
+      stroke: {{ arrow.color }};\
+      stroke-width: 1px;\
+      fill: {{ arrow.color }};\
+    }"
+    ng-attr-d="\
+      M0 0\
+      l{{ -arrow.length / 2 }} {{ - arrow.length * 3/12 }}\
+      v{{  arrow.length / 6 }}\
+      h{{ -arrow.length / 2 }}\
+      v{{  arrow.length / 6 }}\
+      h{{  arrow.length / 2 }}\
+      v{{  arrow.length / 6 }}\
+      z\
+    "
+  )
+  path(
+    ng-switch-when="base"
+    ng-attr-transform="\
+      rotate({{arrow.rotation}} {{ arrow.tip[0] }} {{ arrow.tip[1] }}) \
+      translate({{ arrow.tip[0] }} {{ arrow.tip[1] }})\
+    "
+    style="\
+      stroke: {{ arrow.color }};\
+      stroke-width: 1px;\
+      fill: {{ arrow.color }};\
+    }"
+    ng-attr-d="\
+      M0 0\
+      v{{  arrow.length / 12 }}\
+      h{{  arrow.length / 2 }}\
+      v{{  arrow.length / 6 }}\
+      l{{  arrow.length / 2 }} {{ - arrow.length * 3/12 }}\
+      l{{ -arrow.length / 2 }} {{ - arrow.length * 3/12 }}\
+      v{{  arrow.length / 6 }}\
+      h{{ -arrow.length / 2 }}\
+      z\
+    "
+  )

@@ -24,7 +24,8 @@ angular.module('eau.arrow', [
       tip: '=',
       length: '=',
       color: '=',
-      rotation: '='
+      rotation: '=',
+      point: '='
     }
   };
 });

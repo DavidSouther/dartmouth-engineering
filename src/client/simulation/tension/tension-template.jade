@@ -94,9 +94,9 @@ md-content
         width="400px"
         graph-scales="{\
           x: ['linear', -15, 15], \
-          y: ['linear', -5, 15], \
+          y: ['linear', -10, 20], \
           r: ['linear', 1, 50, 0.5, 6],\
-          force: ['linear', 0, 4e12, 8, 50], \
+          force: ['linear', 0, 1000000000, 8, 50], \
         }"
       )
         path(
@@ -123,6 +123,7 @@ md-content
           rotation="-thetaDeg()"
           tip="[$scales.x(simulation.width / 2), $scales.y(0)]"
           length="$scales.force(simulation.stress())"
+          point="'base'"
         )
 
         arrow(
@@ -130,4 +131,5 @@ md-content
           rotation="180 + thetaDeg()"
           tip="[$scales.x(-simulation.width / 2), $scales.y(0)]"
           length="$scales.force(simulation.stress())"
+          point="'base'"
         )
