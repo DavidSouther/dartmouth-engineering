@@ -121,6 +121,7 @@ md-content
         arrow(
           color="'red'"
           rotation="-thetaDeg()"
+          fill="none"
           tip="[$scales.x(simulation.width / 2), $scales.y(0)]"
           length="$scales.force(simulation.stress())"
           point="'base'"
@@ -129,6 +130,7 @@ md-content
         arrow(
           color="'red'"
           rotation="180 + thetaDeg()"
+          fill="none"
           tip="[$scales.x(-simulation.width / 2), $scales.y(0)]"
           length="$scales.force(simulation.stress())"
           point="'base'"

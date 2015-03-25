@@ -7,8 +7,8 @@ g(ng-switch="arrow.point")
     "
     style="\
       stroke: {{ arrow.color }};\
-      stroke-width: 1px;\
-      fill: {{ arrow.color }};\
+      stroke-width: {{ arrow.weight || 1}}px;\
+      fill: {{ arrow.fill }};\
     }"
     ng-attr-d="\
       M0 0\
@@ -29,8 +29,8 @@ g(ng-switch="arrow.point")
     "
     style="\
       stroke: {{ arrow.color }};\
-      stroke-width: 1px;\
-      fill: {{ arrow.color }};\
+      stroke-width: {{ arrow.weight || 1}}px;\
+      fill: {{ arrow.fill }};\
     }"
     ng-attr-d="\
       M0 0\

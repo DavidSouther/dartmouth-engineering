@@ -1,6 +1,7 @@
 var toRad = Math.PI / 180;
 ArrowController.$inject = ['$scope'];
 function ArrowController($scope){
+  this.fill = this.fill || this.color;
   $scope.sin = function(thetaDeg){
     return Math.sin(thetaDeg * toRad);
   };
@@ -25,7 +26,9 @@ angular.module('eau.arrow', [
       length: '=',
       color: '=',
       rotation: '=',
-      point: '='
+      point: '=',
+      fill: '@',
+      weight: '@'
     }
   };
 });
