@@ -5,7 +5,7 @@
     "test": "grunt",
     "features": "grunt features",
     "watch": "grunt watcher",
-    "rename": "echo 'Coming Soon!'"
+    "prefix": "sh ./src/scripts/sim_prefix.sh"
   },
   "dependencies": {
     "d3-util": "^3.4.13-u2",
