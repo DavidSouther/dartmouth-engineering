@@ -73,16 +73,28 @@ md-content
       flex="30",
       layout="column"
     )
-      div(flex="25", layout="column")
-        md-button.md-raised.md-warn
+      div(layout="column")
+        md-button.md-raised.md-warn(
+          ng-init="showCompressiveHelp = false"
+          ng-click="showCompressiveHelp = !showCompressiveHelp"
+        )
           b Compressive:
           | &nbsp;{{ force.horizontal() | number:0 }}&nbsp;kN
-        | This is the horizontal reaction force at the base or support point of the arch. The horizontal force is equal to the internal compressive force, C, for an arch with a funicular form.
-      div(flex, layout="column")
-        md-button.md-raised.md-accent
+        span(
+          ng-show="showCompressiveHelp"
+        )
+          | This is the horizontal reaction force at the base or support point of the arch. The horizontal force is equal to the internal compressive force, C, for an arch with a funicular form.
+      div(layout="column")
+        md-button.md-raised.md-accent(
+          ng-init="showVerticalHelp = false"
+          ng-click="showVerticalHelp = !showVerticalHelp"
+        )
           b Vertical:
           | &nbsp;{{ force.vertical() | number:0 }}&nbsp;kN
-        | This is the vertical reaction force at the base or support point of the arch. The vertical force must balance out the applied load.
+        span(
+          ng-show="showVerticalHelp"
+        )
+          | This is the vertical reaction force at the base or support point of the arch. The vertical force must balance out the applied load.
       div(flex)
     div(flex, layout="row", layout-align="center center")
       svg(

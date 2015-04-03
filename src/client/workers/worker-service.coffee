@@ -16,6 +16,8 @@ class WorkerSvc
 
 WorkerSvc.$inject = ['$workerCache']
 
+angular.module('workers', [])
+
 angular.module('eau.workers', [
   'workers'
 ])
