@@ -1,15 +1,112 @@
-svg(
-  height="300px"
-  width="600px"
-  graph-scales="{\
-    x: ['linear', -5, 5], \
-    y: ['linear', 3.5, -1.5], \
-  }"
-)
-  line(
-    ng-repeat="beam in truss"
-    from="$scales(beam[0])"
-    to="$scales(beam[1])"
-    stroke="black"
-    stroke-width="2px"
+md-content
+  md-toolbar.md-whiteframe-z1.toolbar
+    section(
+      layout="row",
+      layout-align="space-around"
+    )
+      md-content.md-padding(
+        flex="33"
+      )
+        md-select(
+          ng-model="materialName"
+          placeholder="Material"
+          multiple=false
+        )
+          md-option(
+            ng-repeat="material in materials"
+            ng-value="material"
+          ) {{ material }}
+        div
+          span.material-property-label Density &nbsp;
+          span.material-property-value {{ currentMaterial.density|number:0 }}&nbsp;
+          span.material-property-label kN/m3
+          br
+          span.material-property-label Elasticity &nbsp;
+          span.material-property-value {{ currentMaterial.elasticity | scientific }}&nbsp;
+          span.material-property-label GPa
+      md-content.md-padding(
+        flex="33"
+      )
+        md-select(
+          placeholder="Form"
+          ng-model="formName"
+        )
+          md-option(
+            ng-repeat="form in forms"
+            ng-value="form"
+          ) {{ form }}
+      md-content.md-padding(
+        flex="33"
+      )
+        md-select(
+          placeholder="Bays"
+          ng-model="simulation.bays"
+        )
+          md-option(
+            ng-repeat="i in [1, 2, 3]"
+            ng-value="i"
+          ) {{i}} Bay{{i > 1 ? 's' : ''}}
+        //- span.material-property-label Truss&nbsp;Bays
+        //- md-radio-group(
+        //-   ng-model="simulation.bays"
+        //-   layout="row"
+        //- )
+        //-   md-radio-button(value="1") 1
+        //-   md-radio-button(value="2") 2
+        //-   md-radio-button(value="3") 3
+    section(layout="row", layout-align="space-around")
+      md-content.md-padding(
+        flex
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Truss&nbsp;Height
+          br
+          span.material-property-value {{ simulation.height | number:1}}
+          | m
+        md-slider(
+          aria-label="Control truss height, in meters."
+          ng-model="simulation.height",
+          min="2",
+          max="50",
+          step=".25"
+        )
+      md-content.md-padding(
+        flex
+        layout="column",
+        layout-align="left center",
+      )
+        div.supported-weight-label
+          | Truss&nbsp;Span
+          br
+          span.material-property-value {{ simulation.span | number:1}}
+          | m
+        md-slider(
+          aria-label="Truss span, in meters."
+          ng-model="simulation.span",
+          min="20",
+          max="400",
+          step="1"
+        )
+  div(
+    layout="row",
+    layout-align="space-around"
   )
+    div(flex, layout="row", layout-align="center center")
+      svg(
+        height="200px"
+        width="600px"
+        graph-scales="{\
+          x: ['linear', -255, 255], \
+          y: ['linear', 60, -10], \
+        }"
+      )
+        line(
+          ng-repeat="beam in truss()"
+          from="$scales(beam[0])"
+          to="$scales(beam[1])"
+          stroke="black"
+          stroke-width="2px"
+        )
+  

@@ -1,5 +1,4 @@
 angular.module('eau.simulation.truss.shapes', [
-
 ]).value 'Trusses',
   Pratt:
     flat: (bays = 2)->
