@@ -14,35 +14,34 @@ angular.module('eau.simulation.truss', [
   restrict: 'E'
   templateUrl: 'simulation/truss'
   controller: ($scope, Trusses, MaterialList, $mdDialog)->
+    $scope.ex =
+      load:
+        min: 100
+        max: 100000
+
+    $scope.loading = [
+      'Center',
+      'Left',
+      'Even'
+    ]
     s = $scope.simulation =
       height: 10 # 2 - 50
       span: 100 # 20 - 400
-      load: 'left' # left, middle, right
-      bays: 2
-    currentTruss = []
+      load: $scope.loading[0]
+      form: 'Pratt'
+    currentTruss = null
     currentTrussID = ''
 
     $scope.forms = Object.keys(Trusses)
-    $scope.setCurrentForm = setCurrentForm = (form)->
-      return unless Trusses[form]?
-      $scope.formName = form
-    setCurrentForm 'Howe'
-    $scope.$watch 'formName', (newForm)->
-      setCurrentForm newForm
 
     $scope.truss = ->
       unless currentTrussID is trussID()
         currentTrussID = trussID()
-        currentTruss = Trusses[$scope.formName].flat(s.bays).map (beam)->
-          beam.map (bar)->
-            [bar[0] * s.span / s.bays, bar[1] * s.height]
+        currentTruss = Trusses[s.form][s.load](s.span, s.height)
       currentTruss
 
     trussID = ->
-      "#{$scope.formName} #{s.span}x#{s.height} @ #{s.bays}"
+      "#{$scope.formName} #{s.span}x#{s.height} @ #{s.load}"
 
     $scope.reset = ->
       currentTrussID = trussID()
-
-    $scope.truss()
-    $scope.reset()
