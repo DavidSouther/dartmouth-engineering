@@ -16,8 +16,8 @@ angular.module('eau.simulation.truss', [
   controller: ($scope, Trusses, MaterialList, $mdDialog)->
     $scope.ex =
       load:
-        min: 100
-        max: 100000
+        min: 3
+        max: 6270
 
     $scope.loading = [
       'Center',
@@ -25,8 +25,8 @@ angular.module('eau.simulation.truss', [
       'Even'
     ]
     s = $scope.simulation =
-      height: 10 # 2 - 50
-      span: 100 # 20 - 400
+      height: 3
+      span: 40
       load: $scope.loading[0]
       form: 'Pratt'
     currentTruss = null
