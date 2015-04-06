@@ -7,10 +7,10 @@ class Beam
 angular.module('eau.simulation.truss.shapes', [
 ]).value 'Trusses',
   Pratt:
-    Center: (span, height)->
+    Center: (span, height, load)->
       h = height
-      P = 10 * span
-      hP = 5 * span
+      P = load
+      hP = 0.5 * P
       w = span / 4
       T = Math.atan(h / w)
       sT = Math.sin(T)

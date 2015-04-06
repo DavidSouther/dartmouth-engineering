@@ -5,70 +5,73 @@ md-content
       layout-align="space-around"
     )
       md-content.md-padding(
-        flex="50"
+        flex="33"
       )
-        md-select(
-          placeholder="Form"
-          ng-model="simulation.form"
-        )
-          md-option(
-            ng-repeat="form in forms"
-            ng-value="form"
-          ) {{ form }}
+        md-input-container
+          label.md-no-float Truss Form
+          md-select(
+            placeholder="Form"
+            ng-model="simulation.form"
+          )
+            md-option(
+              ng-repeat="form in forms"
+              ng-value="form"
+            ) {{ form }}
       md-content.md-padding(
-        flex="50"
+        flex="33"
       )
-        md-select(
-          placeholder="Loading"
-          ng-model="simulation.load"
-        )
-          md-option(
-            ng-repeat="load in loading"
-            ng-value="load"
-          ) {{ load }}
-        //- span.material-property-label Truss&nbsp;Bays
-        //- md-radio-group(
-        //-   ng-model="simulation.bays"
-        //-   layout="row"
-        //- )
-        //-   md-radio-button(value="1") 1
-        //-   md-radio-button(value="2") 2
-        //-   md-radio-button(value="3") 3
+        md-input-container
+          label.md-no-float Applied Load
+          md-select(
+            placeholder="Applied load"
+            ng-model="simulation.load"
+          )
+            md-option(
+              ng-repeat="load in [120, 240, 480]"
+              ng-value="load"
+            ) {{ load }} kN
+      md-content.md-padding(
+        flex="33"
+      )
+        md-input-container
+          label.md-no-float Load Distribution
+          md-select(
+            placeholder="Loading"
+            ng-model="simulation.loading"
+          )
+            md-option(
+              ng-repeat="load in loading"
+              ng-value="load"
+            ) {{ load }}
     section(layout="row", layout-align="space-around")
       md-content.md-padding(
         flex
         layout="column",
         layout-align="left center",
       )
-        div.supported-weight-label
-          | Truss&nbsp;Height
-          br
-          span.material-property-value {{ simulation.height | number:1}}
-          | m
-        md-slider(
-          aria-label="Control truss height, in meters."
-          ng-model="simulation.height",
-          min="2",
-          max="10",
-          step=".25"
-        )
+        md-input-container
+          label.md-no-float Truss&nbsp;Span:&nbsp;{{ simulation.span | number:1}}m
+          md-slider(
+            aria-label="Truss span, in meters."
+            ng-model="simulation.span",
+            min="5",
+            max="100",
+            step="1"
+          )
       md-content.md-padding(
         flex
         layout="column",
         layout-align="left center",
       )
-        div.supported-weight-label
-          | Truss&nbsp;Span
-          br
-          span.material-property-value {{ simulation.span | number:1}}
-          | m
-        md-slider(
-          aria-label="Truss span, in meters."
-          ng-model="simulation.span",
-          min="5",
-          max="100",
-          step="1"
-        )
+        md-input-container
+          label.md-no-float Truss&nbsp;Height:&nbsp;{{ simulation.height | number:1}}m
+          md-slider(
+            aria-label="Control truss height, in meters."
+            ng-model="simulation.height",
+            min="2",
+            max="10",
+            step=".25"
+          )
   div(
     layout="row",
     layout-align="space-around"
@@ -86,11 +89,14 @@ md-content
             b {{ connection }}
           div(
             flex="66"
-            style="\
-              color: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load))}}%, 50%); \
-            "
+            style="text-align: right"
           )
-            | {{ beam.load | number:0 }}
+            span(
+              style="\
+                color: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load))}}%, 50%); \
+              "
+            ) {{ beam.load | number:0 }}
+            | &nbsp;kN
     div(flex, layout="row", layout-align="center center")
       svg(
         height="200px"
@@ -102,18 +108,28 @@ md-content
           stroke: ['log', ex.load.min, ex.load.max, 1, 8], \
         }"
       )
-        line(
-          ng-repeat="(connection, beam) in truss().beams"
-          from="$scales(beam.from)"
-          to="$scales(beam.to)"
-          style=" \
-            stroke: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load))}}%, 50%); \
-            stroke-width: {{$scales.stroke(Math.abs(beam.load))}}px; \
-          "
+        g
+          line(
+            ng-repeat="(connection, beam) in truss().beams"
+            from="$scales(beam.from)"
+            to="$scales(beam.to)"
+            style=" \
+              stroke: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load))}}%, 50%); \
+              stroke-width: {{$scales.stroke(Math.abs(beam.load))}}px; \
+            "
+          )
+          text(
+            ng-repeat="(label, point) in truss().points | filter:point[1]:0"
+            at="$scales(point)"
+            text-anchor="middle"
+            ng-attr-alignment-baseline="{{ point[1] == 0 ? 'hanging' : 'baseline'}}"
+          ) {{ label }}
+        g(
+          ng-if="simulation.loading === 'Center'"
         )
-        text(
-          ng-repeat="(label, point) in truss().points | filter:point[1]:0"
-          at="$scales(point)"
-          text-anchor="middle"
-          ng-attr-alignment-baseline="{{ point[1] == 0 ? 'hanging' : 'baseline'}}"
-        ) {{ label }}
+          arrow(
+            color="'hsl(135, 25%, 50%)'"
+            rotation="90"
+            tip="[$scales.x(0), $scales.y(0) + (simulation.load / 12)]"
+            length="simulation.load / 12"
+          )

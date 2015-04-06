@@ -3,6 +3,7 @@ angular.module('eau.simulation.truss', [
   'eau.simulation.compression.materials',
   'simulation.truss.template'
   'eau.utilities.scientific'
+  'eau.arrow'
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
@@ -27,7 +28,8 @@ angular.module('eau.simulation.truss', [
     s = $scope.simulation =
       height: 3
       span: 40
-      load: $scope.loading[0]
+      load: 120
+      loading: $scope.loading[0]
       form: 'Pratt'
     currentTruss = null
     currentTrussID = ''
@@ -37,11 +39,11 @@ angular.module('eau.simulation.truss', [
     $scope.truss = ->
       unless currentTrussID is trussID()
         currentTrussID = trussID()
-        currentTruss = Trusses[s.form][s.load](s.span, s.height)
+        currentTruss = Trusses[s.form][s.loading](s.span, s.height, s.load)
       currentTruss
 
     trussID = ->
-      "#{$scope.formName} #{s.span}x#{s.height} @ #{s.load}"
+      "#{$scope.formName} #{s.span}x#{s.height} @  #{s.load}kN #{s.loading}"
 
     $scope.reset = ->
       currentTrussID = trussID()
