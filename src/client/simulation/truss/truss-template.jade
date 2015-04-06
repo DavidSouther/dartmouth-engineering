@@ -70,7 +70,7 @@ md-content
             ng-model="simulation.height",
             min="2",
             max="10",
-            step=".25"
+            step=".1"
           )
   div(
     layout="row",
@@ -105,7 +105,8 @@ md-content
           x: ['linear', -50, 50], \
           y: ['linear', 30, -3], \
           saturation: ['log', ex.load.min, ex.load.max, 35, 100], \
-          stroke: ['log', ex.load.min, ex.load.max, 1, 8], \
+          stroke: ['log', ex.load.min, ex.load.max, 0.5, 8], \
+          arrow: ['log', 120/3, 480, 10, 25], \
         }"
       )
         g
@@ -114,8 +115,8 @@ md-content
             from="$scales(beam.from)"
             to="$scales(beam.to)"
             style=" \
-              stroke: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load))}}%, 50%); \
-              stroke-width: {{$scales.stroke(Math.abs(beam.load))}}px; \
+              stroke: hsl({{beam.load > 0 ? 200 : 0}}, {{$scales.saturation(Math.abs(beam.load)) || 0}}%, 50%); \
+              stroke-width: {{$scales.stroke(Math.abs(beam.load)) || 1}}px; \
             "
           )
           text(
@@ -130,6 +131,26 @@ md-content
           arrow(
             color="'hsl(135, 25%, 50%)'"
             rotation="90"
-            tip="[$scales.x(0), $scales.y(0) + (simulation.load / 12)]"
-            length="simulation.load / 12"
+            tip="[$scales.x(0), $scales.y(0) + $scales.arrow(simulation.load)]"
+            length="$scales.arrow(simulation.load)"
+          )
+        g(
+          ng-if="simulation.loading === 'Even'"
+        )
+          arrow(
+            ng-repeat="x in [truss().points.C, truss().points.E, truss().points.G]"
+            color="'hsl(135, 25%, 50%)'"
+            rotation="90"
+            tip="[$scales.x(x[0]), $scales.y(0) + $scales.arrow(simulation.load / 3)]"
+            length="$scales.arrow(simulation.load / 3)"
+          )
+        g(
+          ng-if="simulation.loading === 'Left'"
+        )
+          arrow(
+            ng-repeat="x in [truss().points.C]"
+            color="'hsl(135, 25%, 50%)'"
+            rotation="90"
+            tip="[$scales.x(x[0]), $scales.y(0) + $scales.arrow(simulation.load)]"
+            length="$scales.arrow(simulation.load)"
           )
