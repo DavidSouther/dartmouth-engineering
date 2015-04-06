@@ -43,7 +43,7 @@ angular.module('eau.simulation.truss', [
       currentTruss
 
     trussID = ->
-      "#{$scope.formName} #{s.span}x#{s.height} @  #{s.load}kN #{s.loading}"
+      "#{$scope.form} #{s.span}x#{s.height} @  #{s.load}kN #{s.loading}"
 
     $scope.reset = ->
       currentTrussID = trussID()
