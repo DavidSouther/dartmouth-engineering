@@ -121,9 +121,11 @@ md-content
           )
           text(
             ng-repeat="(label, point) in truss().points | filter:point[1]:0"
-            at="$scales(point)"
+            at="[\
+              $scales.x(point[0]) + (point[1] == 0 ? (Math.sign(point[0]) || -1) * -10 : 0), \
+              $scales.y(point[1]) + (point[1] == 0 ? 18 : -5) \
+            ]"
             text-anchor="middle"
-            ng-attr-alignment-baseline="{{ point[1] == 0 ? 'hanging' : 'baseline'}}"
           ) {{ label }}
         g(
           ng-if="simulation.loading === 'Center'"
