@@ -1,78 +1,68 @@
-md-content
-  md-toolbar.md-whiteframe-z1.toolbar
-    section(
+md-content.md-padding
+  md-toolbar.md-whiteframe-z1
+    md-content(
       layout="row",
       layout-align="space-around"
     )
-      md-content.md-padding(
+      md-input-container.md-padding(
         flex="33"
       )
-        md-input-container
-          label.md-no-float Truss Form
-          md-select(
-            placeholder="Form"
-            ng-model="simulation.form"
-          )
-            md-option(
-              ng-repeat="form in forms"
-              ng-value="form"
-            ) {{ form }}
-      md-content.md-padding(
+        label.md-no-float Truss Form
+        md-select(
+          placeholder="Form"
+          ng-model="simulation.form"
+        )
+          md-option(
+            ng-repeat="form in forms"
+            ng-value="form"
+          ) {{ form }}
+      md-input-container.md-padding(
         flex="33"
       )
-        md-input-container
-          label.md-no-float Applied Load
-          md-select(
-            placeholder="Applied load"
-            ng-model="simulation.load"
-          )
-            md-option(
-              ng-repeat="load in [120, 240, 480]"
-              ng-value="load"
-            ) {{ load }} kN
-      md-content.md-padding(
+        label.md-no-float Applied Load
+        md-select(
+          placeholder="Applied load"
+          ng-model="simulation.load"
+        )
+          md-option(
+            ng-repeat="load in [120, 240, 480]"
+            ng-value="load"
+          ) {{ load }} kN
+      md-input-container(
         flex="33"
       )
-        md-input-container
-          label.md-no-float Load Distribution
-          md-select(
-            placeholder="Loading"
-            ng-model="simulation.loading"
-          )
-            md-option(
-              ng-repeat="load in loading"
-              ng-value="load"
-            ) {{ load }}
-    section(layout="row", layout-align="space-around")
-      md-content.md-padding(
-        flex
-        layout="column",
-        layout-align="left center",
-      )
-        md-input-container
-          label.md-no-float Truss&nbsp;Span:&nbsp;{{ simulation.span | number:1}}m
-          md-slider(
-            aria-label="Truss span, in meters."
-            ng-model="simulation.span",
-            min="5",
-            max="100",
-            step="1"
-          )
-      md-content.md-padding(
-        flex
-        layout="column",
-        layout-align="left center",
-      )
-        md-input-container
-          label.md-no-float Truss&nbsp;Height:&nbsp;{{ simulation.height | number:1}}m
-          md-slider(
-            aria-label="Control truss height, in meters."
-            ng-model="simulation.height",
-            min="2",
-            max="10",
-            step=".1"
-          )
-  div(
+        label.md-no-float Load Distribution
+        md-select(
+          placeholder="Loading"
+          ng-model="simulation.loading"
+        )
+          md-option(
+            ng-repeat="load in loading"
+            ng-value="load"
+          ) {{ load }}
+    md-content(
+      layout="row",
+      layout-align="space-around"
+    )
+      md-input-container(flex)
+        label.md-no-float Truss&nbsp;Span:&nbsp;{{ simulation.span | number:1}}m
+        md-slider(
+          aria-label="Truss span, in meters."
+          ng-model="simulation.span",
+          min="5",
+          max="100",
+          step="1"
+        )
+      md-input-container(flex)
+        label.md-no-float Truss&nbsp;Height:&nbsp;{{ simulation.height | number:1}}m
+        md-slider(
+          aria-label="Control truss height, in meters."
+          ng-model="simulation.height",
+          min="2",
+          max="10",
+          step=".1"
+        )
+  md-card(
     layout="row",
     layout-align="space-around"
   )

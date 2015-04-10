@@ -1,12 +1,16 @@
-md-content
-  md-toolbar.md-whiteframe-z1.toolbar
-    section(
+md-content.md-padding
+  md-toolbar.md-whiteframe-z1
+    md-content(
       layout="row",
       layout-align="space-around"
     )
-      md-content.md-padding(
+      md-input-container(
         flex="50"
       )
+        label
+          | Density&nbsp;{{ currentMaterial.density | number:0 }}&nbsp;kN/m3
+          br
+          | Elasticity&nbsp;{{ currentMaterial.elasticity | scientific }}&nbsp;GPa
         md-select(
           ng-model="materialName"
           placeholder="Material"
@@ -16,15 +20,7 @@ md-content
             ng-repeat="material in materials"
             ng-value="material"
           ) {{ material }}
-        div
-          span.material-property-label Density &nbsp;
-          span.material-property-value {{ currentMaterial.density|number:0 }}&nbsp;
-          span.material-property-label kN/m3
-          br
-          span.material-property-label Elasticity &nbsp;
-          span.material-property-value {{ currentMaterial.elasticity | scientific }}&nbsp;
-          span.material-property-label GPa
-      md-content.md-padding(
+      md-input-container(
         flex="50"
       )
         md-select(
@@ -35,32 +31,10 @@ md-content
             ng-repeat="shape in shapes"
             ng-value="shape"
           ) {{ shape }}
-    section(layout="row", layout-align="space-around")
-      //- md-content.md-padding(
-      //-   flex="33"
-      //-   layout="column",
-      //-   layout-align="left center",
-      //- )
-      //-   div.supported-weight-label
-      //-     | Applied&nbsp;Load
-      //-     br
-      //-     span.material-property-value {{ simulation.applied / 3 | number:0}}
-      //-     | kN
-      //-   md-slider(
-      //-     ng-model="simulation.applied",
-      //-     min="{{ simulation.internal() }}",
-      //-     max="{{ 1.1 * simulation.failure() }}"
-      //-   )
-      md-content.md-padding(
-        flex
-        layout="column",
-        layout-align="left center",
-      )
-        div.supported-weight-label
-          | Base&nbsp;Diameter
-          br
-          span.material-property-value {{ simulation.base | number:2}}
-          | m
+    md-content(layout="row", layout-align="space-around")
+      md-input-container(flex)
+        label.md-no-float
+          | Base&nbsp;Diameter&nbsp;{{ simulation.base | number:2}}m
         md-slider(
           aria-label="Set column base diameter."
           ng-model="simulation.base",
@@ -68,16 +42,10 @@ md-content
           max="1",
           step=".05"
         )
-      md-content.md-padding(
-        flex
-        layout="column",
-        layout-align="left center",
-      )
-        div.supported-weight-label
-          | Length&nbsp;
-          br
-          span.material-property-value {{ simulation.length | number:2}}
-          | m
+
+      md-input-container(flex)
+        label.md-no-float
+          | Length&nbsp;{{ simulation.length | number:2}}m
         md-slider(
           aria-label="Set column height."
           ng-model="simulation.length",
@@ -85,7 +53,7 @@ md-content
           max="5",
           step=".05"
         )
-  div(
+  md-card(
     layout="row",
     layout-align="space-around"
   )
