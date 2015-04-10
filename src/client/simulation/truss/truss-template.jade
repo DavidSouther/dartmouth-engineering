@@ -73,7 +73,7 @@ md-content.md-padding
       md-content.md-padding
         div(
           layout="row"
-          ng-repeat="(connection, beam) in truss().beams"
+          ng-repeat="(connection, beam) in _truss.beams"
         )
           div(flex="33")
             b {{ connection }}
@@ -98,10 +98,13 @@ md-content.md-padding
           stroke: ['log', ex.load.min, ex.load.max, 0.5, 8], \
           arrow: ['log', 120/3, 480, 10, 25], \
         }"
+        graph-tick="\
+          _truss = truss(); \
+        "
       )
         g
           line(
-            ng-repeat="(connection, beam) in truss().beams"
+            ng-repeat="(connection, beam) in _truss.beams"
             from="$scales(beam.from)"
             to="$scales(beam.to)"
             style=" \
@@ -110,13 +113,38 @@ md-content.md-padding
             "
           )
           text(
-            ng-repeat="(label, point) in truss().points | filter:point[1]:0"
+            ng-repeat="(label, point) in _truss.points | filter:point[1]:0"
             at="[\
-              $scales.x(point[0]) + (point[1] == 0 ? (Math.sign(point[0]) || -1) * -10 : 0), \
+              $scales.x(point[0]) + ( \
+                point[1] == 0 \
+                ? (Math.sign(point[0]) || -1) * (\
+                  label == 'H' ?\
+                  -12 : \
+                  -10\
+                ) \
+                : 0\
+              ), \
               $scales.y(point[1]) + (point[1] == 0 ? 18 : -5) \
             ]"
             text-anchor="middle"
           ) {{ label }}
+        g(
+        
+        )
+          circle(
+            r="5"
+            fill="none"
+            stroke="green"
+            center="[$scales.x(_truss.points.A[0])+1, $scales.y(0) + 6]"
+          )
+          path(
+            fill="none"
+            stroke="green"
+            ng-attr-d="\
+              M{{ $scales.x(_truss.points.H[0])}}, {{ $scales.y(0) }}\
+              l5,10 h-10 z \
+            "
+          )
         g(
           ng-if="simulation.loading === 'Center'"
         )
@@ -130,7 +158,7 @@ md-content.md-padding
           ng-if="simulation.loading === 'Even'"
         )
           arrow(
-            ng-repeat="x in [truss().points.C, truss().points.E, truss().points.G]"
+            ng-repeat="x in [_truss.points.C, _truss.points.E, _truss.points.G]"
             color="'hsl(135, 25%, 50%)'"
             rotation="90"
             tip="[$scales.x(x[0]), $scales.y(0) + $scales.arrow(simulation.load / 3)]"
@@ -140,7 +168,7 @@ md-content.md-padding
           ng-if="simulation.loading === 'Left'"
         )
           arrow(
-            ng-repeat="x in [truss().points.C]"
+            ng-repeat="x in [_truss.points.C]"
             color="'hsl(135, 25%, 50%)'"
             rotation="90"
             tip="[$scales.x(x[0]), $scales.y(0) + $scales.arrow(simulation.load)]"
