@@ -1,0 +1,117 @@
+md-content.md-padding
+  md-toolbar.md-whiteframe-z1
+    md-content(
+      layout="row",
+      layout-align="space-around"
+    )
+      md-input-container(
+        flex="50"
+      )
+        label.md-no-float
+          | Length:&nbsp;{{ simulation.length | number:2 }}&nbsp;m
+        md-slider(
+          aria-label="Set beam length."
+          ng-model="simulation.length",
+          min="1",
+          max="10",
+          step=".1"
+        )
+      md-input-container(
+        flex="30"
+      )
+        div(layout="row")
+          label.md-no-float
+            | Load:&nbsp;{{simulation.load.applied}}&nbsp;kN
+        md-slider(
+          aria-label="Set beam loading."
+          ng-model="simulation.force.applied",
+          min="10",
+          max="100",
+          step="1"
+        )
+      md-input-container(
+        flex="20"
+      )
+        label.md-no-float Loading
+        md-select(
+          placeholder="Loading"
+          ng-model="simulation.force.loading"
+        )
+          md-option( ng-value="'point'" ) Point
+          md-option( ng-value="'even'" ) Even
+
+    md-content(layout="row", layout-align="space-around")
+      md-input-container(
+        flex="50"
+      )
+        label.md-no-float
+          | Support:&nbsp;{{ simulation.support | number:2 }}&nbsp;m
+        md-slider(
+          aria-label="Set beam support point."
+          ng-model="simulation.support",
+          min="0",
+          max="simulation.length || 10",
+          step=".1"
+        )
+      md-input-container(flex)
+        label.md-no-float
+          | Load&nbsp;Point&nbsp;{{ simulation.load.point | number:1}}m
+        md-slider(
+          aria-label="Set load point distance.",
+          ng-disabled="simulation.force.loading == 'even'"
+          ng-model="simulation.force.point",
+          min="0.1",
+          max="simulation.length || 10",
+          step=".1"
+        )
+  md-card(
+    layout="row",
+    layout-align="space-around"
+  )
+    div(flex, layout="column", layout-align="center center")
+      svg(
+        height="200px"
+        width="400px"
+        graph-scales="{\
+          x: ['linear', -1, 11], \
+          y: ['linear', -1, 1], \
+          applied: ['log', 10, 100, 10, 20], \
+        }"
+      )
+        path(
+          stroke="black"
+          fill="none"
+          ng-attr-d="\
+            M{{$scales.x(0)}},{{$scales.y(0)}} \
+            L{{$scales.x(simulation.length)}},{{$scales.y(0)}} \
+            L{{$scales.x(simulation.length)}},{{$scales.y(0) - 10}} \
+            L{{$scales.x(0)}},{{$scales.y(0) - 10}} \
+            Z \
+          "
+        )
+        g
+          arrow(
+            ng-if="simulation.force.loading == 'point'"
+            color="'blue'"
+            rotation="90"
+            length="$scales.applied(simulation.force.applied)"
+            tip="[$scales.x(simulation.force.point), $scales.y(0) - 10]"
+          )
+        g
+          circle(
+            stroke="green"
+            fill="none"
+            radius="5"
+            center="[\
+              $scales.x(simulation.support) + 1, \
+              $scales.y(0) + 6 \
+            ]"
+          )
+          path(
+            fill="none"
+            stroke="green"
+            ng-attr-d="\
+              M{{ $scales.x(0)}}, {{ $scales.y(0) }}\
+              l5,10 h-10 z \
+            "
+          )

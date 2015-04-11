@@ -6,7 +6,8 @@ angular.module('eau', [
   'eau.simulation.compression',
   'eau.simulation.arch',
   'eau.simulation.tension',
-  'eau.simulation.truss'
+  'eau.simulation.truss',
+  'eau.simulation.beam'
 ])
 .config(function($mdThemingProvider) {
   $mdThemingProvider.theme('default')
