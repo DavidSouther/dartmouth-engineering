@@ -19,7 +19,7 @@ angular.module('eau.simulation.sdof', [
       mass: 10000
       cross: 0.3
 
-    theta = Math.sqrt(3) / 2
+    theta = $scope.theta = Math.sqrt(3) / 2
     TO_DEG = 180 / Math.PI
 
     iPiHalf = 1 / (2 * Math.PI)

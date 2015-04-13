@@ -56,13 +56,15 @@ md-content.md-padding
       width="200px"
       graph-scales="{\
         l: ['linear', 0, 20, 0, 100], \
-        r: ['linear', 100, 100000, 5, 25] \
+        r: ['linear', 100, 100000, 5, 25], \
+        m: ['linear', 0, theta, 0, 1], \
       }"
       graph-tick="\
         angle = tick(); \
         l = $scales.l(simulation.length); \
         ca = Math.cos(angle); \
         sa = Math.sin(angle); \
+        m = Math.abs($scales.m(angle)); \
       "
     )
       g(
@@ -74,7 +76,7 @@ md-content.md-padding
           fill="none"
           ng-attr-d="M0,0\
             Q \
-              {{ l / 2 }} 0 \
+              {{ m * (l/6) + (l/2) }} 0 \
               {{ l * ca }} {{ l * sa}} \
           "
         )
