@@ -1,0 +1,86 @@
+md-content.md-padding
+  md-toolbar.md-whiteframe-z1
+    md-content(
+      layout="row"
+      layout-align="space-around"
+    )
+      md-input-container(
+        flex="33"
+      )
+        label.md-no-float
+          | Length:&nbsp;{{simulation.length | number:1}}&nbsp;m
+        md-slider(
+          aria-label="Set beam length."
+          ng-model="simulation.length",
+          min="1",
+          max="15",
+          step=".1"
+        )
+      md-input-container(
+        flex="33"
+      )
+        label.md-no-float
+          | Cross-section:&nbsp;{{simulation.cross * 100 | number:0}}&nbsp;cm
+        md-slider(
+          aria-label="Set beam cross section."
+          ng-model="simulation.cross",
+          min=".05",
+          max=".5",
+          step=".01"
+        )
+      md-input-container(
+        flex="33"
+      )
+        label.md-no-float
+          | Mass:&nbsp;{{simulation.mass | number:0}}&nbsp;kg
+        md-slider(
+          aria-label="Set supported mass."
+          ng-model="simulation.mass",
+          min="100",
+          max="100000",
+          step="100"
+        )
+      
+  md-card(
+    layout="row",
+    layout-align="space-around"
+  )
+    md-content
+      div.md-padding
+        b Frequency:
+        | &nbsp;{{ frequency() | number:3 }}&nbsp;hz
+        br
+        em {{ 1 / frequency() | number:3 }} seconds per oscillation
+    svg(
+      height="125px"
+      width="200px"
+      graph-scales="{\
+        l: ['linear', 0, 20, 0, 100], \
+        r: ['linear', 100, 100000, 5, 25] \
+      }"
+      graph-tick="\
+        angle = tick(); \
+        l = $scales.l(simulation.length); \
+        ca = Math.cos(angle); \
+        sa = Math.sin(angle); \
+      "
+    )
+      g(
+        transform="translate(100, 100) rotate(-90)"
+      )
+        path(
+          stroke="black"
+          stroke-width="5px"
+          fill="none"
+          ng-attr-d="M0,0\
+            Q \
+              {{ l / 2 }} 0 \
+              {{ l * ca }} {{ l * sa}} \
+          "
+        )
+        circle(
+          center="[l * ca, l * sa]"
+          ng-attr-r="{{ $scales.r(simulation.mass) }}"
+          stroke="none"
+          fill="red"
+        )
