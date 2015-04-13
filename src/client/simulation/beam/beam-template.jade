@@ -37,8 +37,8 @@ md-content.md-padding
           placeholder="Loading"
           ng-model="simulation.load.loading"
         )
-          md-option( ng-value="'point'" ) Point
-          md-option( ng-value="'even'" ) Even
+          md-option( ng-value="'point'" ) Concentrated
+          md-option( ng-value="'even'" ) Distributed
 
     md-content(layout="row", layout-align="space-around")
       md-input-container(
@@ -147,3 +147,27 @@ md-content.md-padding
                 v30 m0,-5, l-10,5 m10,-5 m0,-10, l-10,5 m10,-5, m0,-10, l-10,5\
               "
             )
+      svg(
+        height="100px"
+        width="400px"
+        graph-scales="{\
+          x: ['linear', -1, 11], \
+          y: ['linear', -5000, 5000], \
+          applied: ['log', 10, 100, 10, 20], \
+        }"
+      )
+        path(
+          stroke="black"
+          fill="green"
+          ng-attr-d="\
+            M{{$scales.x(0)}},{{$scales.y(0)}} \
+            L{{$scales.x(0)}},{{$scales.y(0 - V(1))}} \
+            L{{$scales.x(simulation.support)}},{{$scales.y(0 + V(3))}} \
+            L{{$scales.x(simulation.support)}},{{$scales.y(0 - V(2))}} \
+            L{{$scales.x(simulation.length)}},{{$scales.y(0)}} \
+            z \
+          "
+        )
+      div {{ V(1)|number:0 }} -- {{$scales.y(V(1)) | number:2}}
+      div {{ V(2)|number:0 }} -- {{$scales.y(V(2)) | number:2}}
+      div {{ V(3)|number:0 }} -- {{$scales.y(V(3)) | number:2}}

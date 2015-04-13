@@ -20,7 +20,7 @@ angular.module('eau.simulation.beam', [
       load:
         applied: 10
         point: 5
-        loading: 'point'
+        loading: 'even'
 
     $scope.$watch 'simulation.length', (nv, ov)->
       if nv < 1
@@ -41,3 +41,15 @@ angular.module('eau.simulation.beam', [
 
     $scope.forall = (n)->
       [0..Math.ceil(n)]
+
+    $scope.V = (n)->
+      w = s.length
+      l = s.support
+      a = s.length - s.support
+      switch n
+        when 1
+          (w / 2 * l) * (l * l - a * a)
+        when 2
+          w * a
+        when 3
+          (w / 2 * l) * (l * l + a * a)
