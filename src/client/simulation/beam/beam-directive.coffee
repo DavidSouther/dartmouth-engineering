@@ -42,14 +42,102 @@ angular.module('eau.simulation.beam', [
     $scope.forall = (n)->
       [0..Math.ceil(n)]
 
-    $scope.V = (n)->
-      w = s.length
+    $scope.getXs = ->
       l = s.support
       a = s.length - s.support
-      switch n
-        when 1
-          (w / 2 * l) * (l * l - a * a)
-        when 2
-          w * a
-        when 3
-          (w / 2 * l) * (l * l + a * a)
+      if s.load.loading is 'even'
+        interpolate = (arr, right)->
+          if arr.length is 0
+            [right]
+          else
+            left = arr[arr.length - 1]
+            delta = right - left
+            arr.concat [
+              left + (delta / 4 * 1),
+              left + (delta / 4 * 2),
+              left + (delta / 4 * 3)
+              right
+            ]
+        trim = (arr, x)->
+          arr = arr.concat(x) if x > 0
+          arr
+
+        c1 = 0
+        c2 = (l / 2) * (1 - (a * a / (l * l)))
+        c3 = l * ( 1 - (a * a) / (l * l))
+        c4 = l
+        c5 = s.length
+
+        arr =
+          if l is 0
+            [
+              0,
+              s.length / 2,
+              s.length
+            ]
+          else if a is 0
+            [
+              0,
+              # l/4,
+              l/2,
+              # l/4*3,
+              l
+            ]
+          else
+            [
+              c1,
+              c2,
+              c3,
+              c4,
+              c5
+            ]
+
+        arr = arr
+        .reduce interpolate, []
+        .reduce trim, []
+        arr.unshift 0
+        arr
+
+    $scope.getMs = ->
+      l = s.support
+      a = s.length - l
+      if s.load.loading is 'even'
+        w = s.load.applied * s.length
+        xs = $scope.getXs()
+        R1 = $scope.V(1)
+        ms = xs.map (x)->
+          if l is 0
+            x = a - x
+            - w * x * x / 2
+          else if x <= l
+            ((w * x) / (2 * l)) * ((l * l) - (a * a) - (x * l))
+          else
+            x = x - l
+            -(w / 2) * (a - x) * (a - x)
+
+    $scope.moment = ($scales)->
+      xs = $scope.getXs()
+      ms = $scope.getMs()
+      zip = (x, i)-> [x, ms[i]]
+      points = xs.map(zip)
+      if s.support is 0
+        points.push([0, 0])
+      if $scales
+        points = points.map($scales)
+        line = d3.svg.line()(points) + 'z'
+        line
+      else
+        points
+
+    $scope.V = (n)->
+      l = s.support
+      a = s.length - l
+      if s.load.loading is 'even'
+        w = s.load.applied * s.length
+        switch n
+          when 1
+            (w / 2 * l) * (l * l - a * a)
+          when 2
+            w * a
+          when 3
+            (w / 2 * l) * (l * l + a * a)

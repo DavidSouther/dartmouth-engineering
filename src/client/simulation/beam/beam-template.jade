@@ -21,7 +21,7 @@ md-content.md-padding
       )
         div(layout="row")
           label.md-no-float
-            | Load:&nbsp;{{simulation.load.applied}}&nbsp;kN
+            | Load:&nbsp;{{simulation.load.applied}}&nbsp;{{ simulation.load.loading == 'point' ? 'kg' : 'kg/m'}}
         md-slider(
           aria-label="Set beam loading."
           ng-model="simulation.load.applied",
@@ -70,10 +70,10 @@ md-content.md-padding
   )
     div(flex, layout="column", layout-align="center center")
       svg(
-        height="100px"
+        height="60px"
         width="400px"
         graph-scales="{\
-          x: ['linear', -1, 11], \
+          x: ['linear', -1, 13], \
           y: ['linear', -1, .5], \
           applied: ['log', 10, 100, 10, 20], \
         }"
@@ -151,14 +151,15 @@ md-content.md-padding
         height="100px"
         width="400px"
         graph-scales="{\
-          x: ['linear', -1, 11], \
-          y: ['linear', -5000, 5000], \
+          x: ['linear', -1, 13], \
+          y: ['linear', -700000, 300000], \
           applied: ['log', 10, 100, 10, 20], \
         }"
       )
         path(
           stroke="black"
           fill="green"
+          ng-init="vs = Vs()"
           ng-attr-d="\
             M{{$scales.x(0)}},{{$scales.y(0)}} \
             L{{$scales.x(0)}},{{$scales.y(0 - V(1))}} \
@@ -168,6 +169,30 @@ md-content.md-padding
             z \
           "
         )
-      div {{ V(1)|number:0 }} -- {{$scales.y(V(1)) | number:2}}
-      div {{ V(2)|number:0 }} -- {{$scales.y(V(2)) | number:2}}
-      div {{ V(3)|number:0 }} -- {{$scales.y(V(3)) | number:2}}
+        text(
+          ng-if="V(1) > 0"
+          at="[$scales.x(0), $scales.y(-V(1)) - 5]"
+        ) {{ V(1)|number:0 }} kg·m
+        text(
+          at="[$scales.x(simulation.support), $scales.y(V(3)) + 15]"
+        ) {{ V(3)|number:0 }} kg·m
+        text(
+          ng-if="V(2) > 0"
+          at="[$scales.x(simulation.support), $scales.y(-V(2)) - 5]"
+        ) {{ V(2)|number:0 }} kg·m
+      svg(
+        height="100px"
+        width="400px"
+        graph-scales="{\
+          x: ['linear', -1, 13], \
+          y: ['linear', -12500, 12500], \
+          applied: ['log', 10, 100, 10, 20], \
+        }"
+      )
+        path(
+          stroke="black"
+          fill="orange"
+          ng-attr-d="{{moment($scales)}}"
+        )
+      //- md-content.md-padding
+      //-   pre {{ getXs() | json }}
