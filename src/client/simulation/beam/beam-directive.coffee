@@ -123,16 +123,26 @@ angular.module('eau.simulation.beam', [
       if s.support is 0
         points.push([0, 0])
       if $scales
-        points = points.map($scales)
+        points = points.map((p)->[$scales.xa(p[0]), $scales.yme(p[1])])
         line = d3.svg.line()(points) + 'z'
         line
       else
         points
 
+    $scope.pointMoment = ->
+      a = s.load.point
+      l = s.support
+      P = s.load.applied
+      if a <= l
+        b = l - a
+        P * a * b / l
+      else
+        -P * (a - l)
+
     $scope.V = (n)->
       l = s.support
-      a = s.length - l
       if s.load.loading is 'even'
+        a = s.length - l
         w = s.load.applied * s.length
         switch n
           when 1
@@ -141,3 +151,22 @@ angular.module('eau.simulation.beam', [
             w * a
           when 3
             (w / 2 * l) * (l * l + a * a)
+      else if s.load.loading is 'point'
+        P = s.load.applied
+        a = s.load.point
+        if l is 0
+          -P
+        else
+          if a > l
+            switch n
+              when 1
+                - P * (a - l) / l
+              when 2
+                P
+          else
+            b = l - a
+            switch n
+              when 1
+                P * b / l
+              when 2
+                - P * a / l
