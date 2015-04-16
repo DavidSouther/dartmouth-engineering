@@ -18,7 +18,7 @@ angular.module('eau.simulation.beam', [
       length: 10
       support: 8
       load:
-        applied: 10
+        applied: 60
         point: 5
         loading: 'even'
 
