@@ -1,46 +1,64 @@
 md-content.md-padding
   md-toolbar.md-whiteframe-z1
     md-content(
-      layout="row"
-      layout-align="space-around"
+      layout="column"
     )
-      md-input-container(
-        flex="33"
+      section(
+        layout="row"
+        layout-align="space-around"
       )
-        label.md-no-float
-          | Length:&nbsp;{{simulation.length | number:1}}&nbsp;m
-        md-slider(
-          aria-label="Set beam length."
-          ng-model="simulation.length",
-          min="1",
-          max="15",
-          step=".1"
+        md-input-container(
+          flex
         )
-      md-input-container(
-        flex="33"
-      )
-        label.md-no-float
-          | Cross-section:&nbsp;{{simulation.cross * 100 | number:0}}&nbsp;cm
-        md-slider(
-          aria-label="Set beam cross section."
-          ng-model="simulation.cross",
-          min=".05",
-          max=".5",
-          step=".01"
+          label.md-no-float
+            | Length:&nbsp;{{simulation.length | number:1}}&nbsp;m
+          md-slider(
+            aria-label="Set beam length."
+            ng-model="simulation.length",
+            min="1",
+            max="15",
+            step=".1"
+          )
+        md-input-container(
+          flex
         )
-      md-input-container(
-        flex="33"
-      )
-        label.md-no-float
-          | Mass:&nbsp;{{simulation.mass | number:0}}&nbsp;kg
-        md-slider(
-          aria-label="Set supported mass."
-          ng-model="simulation.mass",
-          min="100",
-          max="100000",
-          step="100"
+          label.md-no-float
+            | Cross-section:&nbsp;{{simulation.cross * 100 | number:0}}&nbsp;cm
+          md-slider(
+            aria-label="Set beam cross section."
+            ng-model="simulation.cross",
+            min=".05",
+            max=".5",
+            step=".01"
+          )
+
+        md-input-container(
+          flex
         )
-      
+          label.md-no-float
+            | Mass:&nbsp;{{simulation.mass | number:0}}&nbsp;kg
+          md-slider(
+            aria-label="Set supported mass."
+            ng-model="simulation.mass",
+            min="100",
+            max="100000",
+            step="100"
+          )
+        md-input-container(
+          flex
+        )
+          label.md-no-float
+            | Material&nbsp;Elasticity:&nbsp;
+            | {{ currentMaterial.elasticity | scientific }}&nbsp;GPa
+          md-select(
+            ng-model="materialName"
+            placeholder="Material"
+            multiple=false
+          )
+            md-option(
+              ng-repeat="material in materials"
+              ng-value="material"
+            ) {{ material }}
   md-card(
     layout="row",
     layout-align="space-around"
