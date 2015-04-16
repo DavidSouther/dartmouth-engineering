@@ -25,7 +25,7 @@ md-content.md-padding
         md-slider(
           aria-label="Set beam loading."
           ng-model="simulation.load.applied",
-          min="10",
+          min="50",
           max="100",
           step="1"
         )
@@ -53,17 +53,19 @@ md-content.md-padding
           max="10",
           step=".1"
         )
-      md-input-container(flex)
-        label.md-no-float
-          | Load&nbsp;Point&nbsp;{{ simulation.load.point | number:1}}m
-        md-slider(
-          aria-label="Set load point distance.",
-          ng-disabled="simulation.load.loading == 'even'"
-          ng-model="simulation.load.point",
-          min="0.1",
-          max="10",
-          step=".1"
+      div(flex)
+        md-input-container(
+          ng-hide="simulation.load.loading == 'even'"
         )
+          label.md-no-float
+            | Load&nbsp;Point&nbsp;{{ simulation.load.point | number:1}}m
+          md-slider(
+            aria-label="Set load point distance.",
+            ng-model="simulation.load.point",
+            min="0.1",
+            max="10",
+            step=".1"
+          )
   md-card(
     layout="row",
     layout-align="space-around"
@@ -148,6 +150,7 @@ md-content.md-padding
             path(
               fill="none"
               stroke="green"
+              stroke-width="2px"
               ng-attr-d="\
                 M{{$scales.xa(0)}}, {{ $scales.yb(0) - 15}},\
                 v30 m0,-5, l-10,5 m10,-5 m0,-10, l-10,5 m10,-5, m0,-10, l-10,5\
@@ -177,19 +180,19 @@ md-content.md-padding
           text(
             ng-if="V(1) > 0"
             at="[$scales.xa(0), $scales.yse(-V(1)) - 5]"
-            text-anchor="start"
+            ng-attr-text-anchor="{{simulation.length > 7.5 ? 'start' : simulation.length < 4 ? 'end' : 'middle'}}"
           ) {{ V(1)|number:0 }} kg·m
           text(
             at="[$scales.xa(simulation.support), $scales.yse(V(3)) + 15]"
-            text-anchor="middle"
+            ng-attr-text-anchor="{{simulation.support < simulation.length / 2 ? 'middle' : 'end'}}"
           ) {{ V(3)|number:0 }} kg·m
           text(
             ng-if="V(2) > 0"
             at="[$scales.xa(simulation.support), $scales.yse(-V(2)) - 5]"
-            text-anchor="end"
+            text-anchor="middle"
           ) {{ V(2)|number:0 }} kg·m
         svg(
-          height="100px"
+          height="260px"
           width="400px"
         )
           path(
