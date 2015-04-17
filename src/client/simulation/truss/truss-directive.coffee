@@ -7,6 +7,7 @@ angular.module('eau.simulation.truss', [
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
+  'eau.navigation'
 ]).config ['SimulationNavProvider', (sims)->
   sims.sim 'truss',
     title: 'Truss'
