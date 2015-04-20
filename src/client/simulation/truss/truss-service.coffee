@@ -254,7 +254,7 @@ angular.module('eau.simulation.truss.shapes', [
       FBC =  P
       FBD = -hP * cT
       FBE = -qP / sT
-      FCE =  hP * cT
+      FCE =  FAC
       FED = 0
       FEF =  qP / sT
       FEG =  qP * cT
@@ -288,7 +288,7 @@ angular.module('eau.simulation.truss.shapes', [
       P = load / 3
       hP = 0.5 * P
       oP = 1.5 * P
-      tP = 3.0 * P
+      tP = 2.0 * P
       w = span / 4
       T = Math.atan(h / w)
       sT = Math.sin(T)
