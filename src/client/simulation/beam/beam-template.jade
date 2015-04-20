@@ -77,11 +77,15 @@ md-content.md-padding
       ysp: ['linear', 160, -160, 0, 100], \
       ymp: ['linear', 400, -400, 0, 100], \
       applied: ['log', 10, 100, 10, 20], \
+      b: [ 'linear', 0, 1.06, 0, 100], \
+      t: ['linear', 0, .0106, 1, 3], \
     }"
   )
-    table
+    table(
+      width="100%"
+    )
       tr
-        td(width="25%")
+        td(width="20%")
         td(width="50%")
           svg(
             height="60px"
@@ -157,7 +161,101 @@ md-content.md-padding
                     v30 m0,-5, l-10,5 m10,-5 m0,-10, l-10,5 m10,-5, m0,-10, l-10,5\
                   "
                 )
-        td
+        td(
+          width="30%"
+          rowspan="3"
+          valign="top"
+          align="center"
+          ng-if="simulation.showBeam"
+        )
+          md-content(
+            layout="column",
+            layout-align="space-around"
+          )
+            md-input-container
+              label.md-no-float
+                | Material&nbsp;Stress:&nbsp;
+                | {{ currentMaterial.elasticity | scientific }}&nbsp;kN
+              md-select(
+                ng-model="materialName"
+                placeholder="Material"
+                multiple=false
+              )
+                md-option(
+                  ng-repeat="material in materials"
+                  ng-value="material"
+                ) {{ material }}
+            md-input-container
+              label.md-no-float
+                | Beam&nbsp;Cross-Section
+              md-select(
+                ng-model="crossSection"
+                placeholder="Cross-Section"
+                multiple=false
+              )
+                md-option(
+                  ng-repeat="section in crossSections"
+                  ng-value="section"
+                ) {{ section.name }}
+          md-content.md-padding
+            svg(
+              height="100px"
+              width="100px"
+            )
+              g(
+                transform="translate(50, 50)"
+                transform-origin="50% 50%"
+              )
+                path(
+                  ng-if="crossSection.name == 'Solid'"
+                  stroke="blue"
+                  fill="blue"
+                  ng-attr-d="\
+                    M-{{$scales.b(crossSection.b())/2}}, -{{$scales.b(crossSection.b())/2}} \
+                    h {{$scales.b(crossSection.b())}}\
+                    v {{$scales.b(crossSection.b())}}\
+                    h-{{$scales.b(crossSection.b())}}\
+                    z\
+                  "
+                )
+                path(
+                  ng-if="crossSection.name == 'Hollow'"
+                  stroke="blue"
+                  ng-attr-stroke-width="{{$scales.t(crossSection.t())}}"
+                  fill="none"
+                  ng-attr-d="\
+                    M-{{$scales.b(crossSection.b())/2}}, -{{$scales.b(crossSection.b())/2}} \
+                    h{{$scales.b(crossSection.b())}}\
+                    v{{$scales.b(crossSection.b())}}\
+                    h-{{$scales.b(crossSection.b())}}\
+                    z\
+                  "
+                )
+                path(
+                  ng-if="crossSection.name == 'I-Beam'"
+                  stroke="blue"
+                  fill="none"
+                  ng-attr-stroke-width="{{$scales.t(crossSection.t())}}"
+                  ng-attr-d="\
+                    M-{{$scales.b(crossSection.b())/2}}, -{{$scales.b(crossSection.b())/2}} \
+                    h {{$scales.b(crossSection.b())}}\
+                    h-{{$scales.b(crossSection.b())/2}}\
+                    v {{$scales.b(crossSection.b() * 1.5)}}\
+                    h-{{$scales.b(crossSection.b())/2}}\
+                    h {{$scales.b(crossSection.b())}}\
+                    h-{{$scales.b(crossSection.b())/2}}\
+                    v-{{$scales.b(crossSection.b() * 1.5)}}\
+                    z\
+                  "
+                )
+          md-content.md-padding
+            b Width:&nbsp;
+            | {{ crossSection.b()*100|number:0 }}&nbsp;cm
+            br
+            b Area:&nbsp;
+            | {{ crossSection.area()*10000|number:0 }}&nbsp;cm
+            sup 2
+            
       tr
         td.md-padding(
           valign="top"
@@ -220,7 +318,7 @@ md-content.md-padding
         )
           b Moment
           br
-          | Mmax: {{ MaxM() | number:0 }} kNm
+          | Mmax:&nbsp;{{ MaxM() | number:0 }}&nbsp;kNm
         td
           svg(
             ng-if="simulation.load.loading == 'even'"

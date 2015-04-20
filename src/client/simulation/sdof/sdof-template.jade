@@ -49,7 +49,7 @@ md-content.md-padding
         )
           label.md-no-float
             | Material&nbsp;Elasticity:&nbsp;
-            | {{ currentMaterial.elasticity | scientific }}&nbsp;GPa
+            | {{ currentMaterial.tress | scientific }}&nbsp;GPa
           md-select(
             ng-model="materialName"
             placeholder="Material"
@@ -63,12 +63,11 @@ md-content.md-padding
     layout="row",
     layout-align="space-around"
   )
-    md-content
-      div.md-padding
-        b Frequency:
-        | &nbsp;{{ frequency() | number:3 }}&nbsp;hz
-        br
-        em {{ 1 / frequency() | number:3 }} seconds per oscillation
+    md-content.md-padding
+      b Frequency:
+      | &nbsp;{{ frequency() | number:3 }}&nbsp;hz
+      br
+      em {{ 1 / frequency() | number:3 }} seconds per oscillation
     svg(
       height="125px"
       width="200px"

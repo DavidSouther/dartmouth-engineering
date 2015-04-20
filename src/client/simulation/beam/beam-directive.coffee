@@ -1,10 +1,11 @@
 angular.module('eau.simulation.beam', [
   'simulation.beam.template'
   'eau.utilities.scientific'
+  'eau.simulation.compression.materials'
   'graphing.scales'
   'graphing.svg'
   'ngMaterial'
-  'eau.navigation',
+  'eau.navigation'
   'eau.arrow'
 ]).config ['SimulationNavProvider', (sims)->
   sims.sim 'beam',
@@ -13,8 +14,60 @@ angular.module('eau.simulation.beam', [
 .directive 'beam', ->
   restrict: 'E'
   templateUrl: 'simulation/beam'
-  controller: ($scope)->
+  controller: ($scope, $location, MaterialList)->
+    $scope.setCurrentMaterial = setCurrentMaterial = (materialName) ->
+      return unless MaterialList[materialName]?
+      $scope.materialName = materialName
+      $scope.currentMaterial =
+        material: materialName
+        density: MaterialList[materialName].density
+        elasticity: MaterialList[materialName].elasticity
+        color: MaterialList[materialName].color
+        stress: MaterialList[materialName].stress
+
+    # $scope.materials = Object.keys MaterialList
+    $scope.materials = ['Steel', 'Wood', 'Concrete']
+    setCurrentMaterial 'Steel'
+    $scope.$watch 'materialName', setCurrentMaterial
+
+    $scope.crossSections = [
+      name: 'Solid'
+      b: ->
+        Math.pow((Math.abs($scope.MaxM()) * 6 / $scope.currentMaterial.stress), 1/3)
+      area: ->
+        this.b() * this.b()
+      t: -> 1
+    ,
+      name: 'Hollow'
+      b: ->
+        Math.pow((Math.abs($scope.MaxM()) * 0.0984 / $scope.currentMaterial.stress), 1/3)
+      t: ->
+        0.1 * this.b()
+      area: ->
+        b = this.b()
+        t = this.t()
+        s = b - 2 * t
+        (b * b) - (s * s)
+    ,
+      name:'I-Beam'
+      b: ->
+        Math.pow((Math.abs($scope.MaxM()) * 0.5947 / $scope.currentMaterial.stress), 1/3)
+      t: ->
+        0.1 * this.b()
+      area: ->
+        b = this.b()
+        t = this.t()
+        h = b * 1.5
+        s = b - 2 * t
+        totalArea = b * h
+        middleArea = (b - s) * h
+        beamArea = h * t
+        totalArea - (middleArea - beamArea)
+    ]
+    $scope.crossSection = $scope.crossSections[0]
+
     s = $scope.simulation =
+      showBeam: $location.search().cross or no
       length: 10
       support: 8
       load:
