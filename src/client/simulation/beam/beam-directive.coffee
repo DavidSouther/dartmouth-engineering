@@ -129,6 +129,18 @@ angular.module('eau.simulation.beam', [
       else
         points
 
+    absMax = (a, b)->
+      if Math.abs(a) > Math.abs(b)
+        a
+      else
+        b
+
+    $scope.MaxM = ->
+      if s.load.loading is 'even'
+        $scope.getMs().reduce absMax, 0
+      else
+        $scope.pointMoment()
+
     $scope.pointMoment = ->
       a = s.load.point
       l = s.support
@@ -139,18 +151,35 @@ angular.module('eau.simulation.beam', [
       else
         -P * (a - l)
 
+    $scope.MaxV = ->
+      if s.support is 0
+        if s.load.loading is 'even'
+          $scope.V(1)
+        else
+          s.load.applied * s.length
+      else
+        if s.load.loading is 'even'
+          [
+            $scope.V(1), $scope.V(2), $scope.V(3)
+          ].reduce absMax, 0
+        else
+          absMax $scope.V(1), $scope.V(2)
+
     $scope.V = (n)->
       l = s.support
       if s.load.loading is 'even'
         a = s.length - l
         w = s.load.applied * s.length
-        switch n
-          when 1
-            (w / 2 * l) * (l * l - a * a)
-          when 2
-            w * a
-          when 3
-            (w / 2 * l) * (l * l + a * a)
+        if l is 0
+          w * a
+        else
+          switch n
+            when 1
+              (w / (2 * l)) * (l * l - a * a)
+            when 2
+              w * a
+            when 3
+              (w / (2 * l)) * (l * l + a * a)
       else if s.load.loading is 'point'
         P = s.load.applied
         a = s.load.point
