@@ -175,9 +175,11 @@ md-content.md-padding
             md-input-container
               label.md-no-float
                 | Material&nbsp;Stress:&nbsp;
-                | {{ currentMaterial.elasticity | scientific }}&nbsp;kN
+                | {{ currentMaterial.elasticity | scientific }}&nbsp;
+                |kN/m
+                sup 2
               md-select(
-                ng-model="materialName"
+                ng-model="$parent.materialName"
                 placeholder="Material"
                 multiple=false
               )
