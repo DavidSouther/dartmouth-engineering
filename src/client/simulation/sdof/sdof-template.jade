@@ -49,7 +49,9 @@ md-content.md-padding
         )
           label.md-no-float
             | Material&nbsp;Elasticity:&nbsp;
-            | {{ currentMaterial.tress | scientific }}&nbsp;GPa
+            | {{ currentMaterial.elasticity | scientific }}&nbsp;
+            |kN/m
+            sup 2
           md-select(
             ng-model="materialName"
             placeholder="Material"

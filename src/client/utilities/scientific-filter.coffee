@@ -7,5 +7,5 @@ angular.module('eau.utilities.scientific', [
     exponent = number.length - 1
     value = '' + number.charAt(0)
     if digits then value += '.' + number.substr(1, digits)
-    value += 'e' + exponent
+    value += '*10^' + exponent
     value

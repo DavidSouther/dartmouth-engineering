@@ -8,9 +8,13 @@ md-content.md-padding
         flex="50"
       )
         label
-          | Density&nbsp;{{ currentMaterial.density | number:0 }}&nbsp;kN/m3
+          | Density&nbsp;{{ currentMaterial.density | number:0 }}&nbsp;
+          |kN/m
+          sup 3
           br
-          | Elasticity&nbsp;{{ currentMaterial.elasticity | scientific }}&nbsp;GPa
+          | Elasticity&nbsp;{{ currentMaterial.elasticity | scientific }}&nbsp;
+          |kN/m
+          sup 2
         md-select(
           ng-model="materialName"
           placeholder="Material"
