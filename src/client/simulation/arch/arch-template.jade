@@ -49,7 +49,9 @@ md-content.md-padding
           ng-click="showCompressiveHelp = !showCompressiveHelp"
         )
           b Compressive:
-          span(style="text-transform: none;")&nbsp;{{ force.horizontal() | number:0 }}&nbsp;kN
+          br
+          span(style="text-transform: none;")
+            | {{ force.horizontal() | number:0 }}&nbsp;kN
         span(
           ng-show="showCompressiveHelp"
         )
@@ -60,7 +62,9 @@ md-content.md-padding
           ng-click="showVerticalHelp = !showVerticalHelp"
         )
           b Vertical:
-          span(style="text-transform: none;")&nbsp;{{ force.vertical() | number:0 }}&nbsp;kN
+          br
+          span(style="text-transform: none;")
+            | {{ force.vertical() | number:0 }}&nbsp;kN
         span(
           ng-show="showVerticalHelp"
         )
